@@ -1,0 +1,12 @@
+{
+	"main": "index.js",
+	
+	"scripts": {
+		"start": "node index.js"
+	},
+	
+	"dependencies": {
+		"express": "latest",
+		"pg": "latest"
+	}
+}

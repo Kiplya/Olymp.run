@@ -1,0 +1,65 @@
+services:
+    db:
+        image: postgres
+        container_name: olymprun_db
+        restart: always
+        environment:
+            POSTGRES_USER: kipli
+            POSTGRES_PASSWORD: zybrbnf123
+            POSTGRES_DB: olymprun_db
+        ports:
+            - "5432:5432"
+        volumes:
+            - db_data:/var/lib/postgresql/data
+            - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+        networks:
+            - olymprun
+
+    backend:
+        build: ./backend
+        container_name: olymprun_backend
+        ports:
+            - "8000:8000"
+        depends_on:
+            - db
+        environment:
+            BACKEND_PORT: 8000
+            DB_HOST: db
+            DB_PORT: 5432
+            DB_USER: kipli
+            DB_PASSWORD: zybrbnf123
+            DB_NAME: olymprun_db
+        networks:
+            - olymprun
+      
+    frontend:
+        build: ./frontend
+        container_name: olymprun_frontend
+        ports:
+            - "3000:3000"
+        depends_on:
+            - backend
+        networks:
+            - olymprun
+        volumes:
+            - frontend_build:/frontend_build
+    
+    nginx:
+        image: nginx
+        container_name: olymprun_nginx
+        depends_on:
+            - backend
+        ports:
+            - "80:80"
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - frontend_build:/usr/share/nginx/html
+        networks:
+            - olymprun
+    
+volumes:
+    db_data:
+    frontend_build:
+    
+networks:
+    olymprun:
