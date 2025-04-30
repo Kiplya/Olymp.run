@@ -1,18 +1,32 @@
 {
   "name": "olymp.run",
-  "main": "index.jsx",
-  
+  "main": "index.tsx",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
-  
   "dependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-scripts": "latest"
+    "react-router": "latest",
+    "react-scripts": "latest",
+    "typescript": "latest"
   },
-  
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-import-resolver-typescript": "latest",
+    "eslint-plugin-jsx-a11y": "latest",
+    "eslint-plugin-prettier": "latest",
+    "eslint-plugin-react": "latest",
+    "eslint-plugin-react-hooks": "latest",
+    "prettier": "latest"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
