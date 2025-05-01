@@ -29,16 +29,36 @@ html {
 
 :root {
   --font-small: clamp(0.875rem, 1dvw, 1rem);
-  --font-medium: clamp(1rem, 1.2dvw, 1.25rem);
+  --font-medium: clamp(1rem, 1.25dvw, 1.25rem);
   --font-large: clamp(1.25rem, 1.5dvw, 1.5rem);
 }
 
-p {
+p,
+h1 {
   font-family: 'Inter';
   color: rgb(246, 246, 246);
+}
+
+p {
+  font-size: var(--font-medium);
+}
+
+h1 {
+  font-size: var(--font-large);
 }
 
 img {
   object-fit: contain;
   user-select: none;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+}
+
+input {
+  outline: none;
 }
