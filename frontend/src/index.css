@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: none;
+}
+
+html {
+  font-size: 1em;
+}
+
+@media (min-width: 2560px) {
+  html {
+    font-size: 1.5em;
+  }
+}
+
+@media (min-width: 3860px) {
+  html {
+    font-size: 2em;
+  }
+}
+
+@media ((max-width: 768px)) {
+  html {
+    font-size: 0.75em;
+  }
+}
+
+:root {
+  --font-small: clamp(0.875rem, 1dvw, 1rem);
+  --font-medium: clamp(1rem, 1.2dvw, 1.25rem);
+  --font-large: clamp(1.25rem, 1.5dvw, 1.5rem);
+}
+
+p {
+  font-family: 'Inter';
+  color: rgb(246, 246, 246);
+}
+
+img {
+  object-fit: contain;
+  user-select: none;
+}

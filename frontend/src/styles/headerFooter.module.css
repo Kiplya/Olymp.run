@@ -1,0 +1,33 @@
+.headerFooter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: #171717;
+}
+
+.header {
+  height: 10dvh;
+}
+
+.footer {
+  height: 5dvh;
+}
+
+.logoImg {
+  height: 80%;
+  max-width: 50%;
+}
+
+.p {
+  font-size: var(--font-small);
+  text-align: center;
+}
+
+.logoutBtn {
+  position: absolute;
+  right: 2%;
+  aspect-ratio: 1/1;
+  height: 50%;
+  cursor: pointer;
+}

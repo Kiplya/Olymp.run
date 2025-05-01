@@ -1,0 +1,5 @@
+.pageLayout {
+  min-height: 85dvh;
+  display: flex;
+  background-color: #212121;
+}
