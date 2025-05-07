@@ -1,43 +1,48 @@
 .authDiv {
   display: flex;
   min-height: 85dvh;
-  padding-bottom: 25dvh;
+  padding-bottom: 20dvh;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  gap: 1rem;
 }
 
-.authForm {
+.authDiv form {
   padding: 3dvh;
-  margin-top: 2dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
   border: 0.05dvh solid rgb(100, 100, 100);
   border-radius: 3dvh;
 }
 
-.authInput {
-  margin: 1dvh;
+.authDiv form input {
   padding: 1dvh;
   width: 15rem;
   background-color: rgb(70, 70, 70);
-  border: 0.05dvh solid black;
   font-family: 'Inter';
   color: rgb(246, 246, 246);
   font-size: var(--font-small);
+  border: 0.05dvh solid rgb(70, 70, 70);
 }
 
-.authInput::placeholder {
+.authDiv form input::placeholder {
   color: rgb(246, 246, 246);
 }
 
-.authInput:focus {
+.authDiv form input:focus {
   border-color: rgb(100, 100, 100);
 }
 
+.authDiv p {
+  height: var(--font-medium);
+  transition: opacity 0.1s linear;
+  color: #ab2328;
+}
+
 .authBtn {
-  margin-top: 2dvh;
   padding: 1dvh;
   width: fit-content;
   background-color: transparent;
@@ -45,11 +50,11 @@
   font-size: var(--font-small);
   border: 0.05dvh solid rgb(130, 130, 130);
   border-radius: 1dvh;
-  transition: transform 0.2s ease;
 }
 
 @media (hover: hover) {
   .authBtn:hover {
-    transform: scale(1.2);
+    transition: transform 0.2s ease;
+    transform: scale(1.1);
   }
 }

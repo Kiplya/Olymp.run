@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import cl from '../styles/commonButton.module.css'
+import cl from '../styles/button.module.css'
 
 interface CommonButtonProps {
   label: string
@@ -11,7 +11,7 @@ interface CommonButtonProps {
 }
 
 const CommonButton: FC<CommonButtonProps> = ({ className, label, type, onClick, disabled }) => (
-  <button className={className} type={type} onClick={onClick} disabled={disabled}>
+  <button className={className ? className : cl.button} type={type} onClick={onClick} disabled={disabled}>
     {label}
   </button>
 )

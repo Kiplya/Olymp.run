@@ -19,7 +19,7 @@
   max-width: 50%;
 }
 
-.p {
+.footer p {
   font-size: var(--font-small);
   text-align: center;
 }
@@ -30,4 +30,10 @@
   aspect-ratio: 1/1;
   height: 50%;
   cursor: pointer;
+}
+
+@media (orientation: portrait) {
+  .logoutBtn {
+    height: 40%;
+  }
 }

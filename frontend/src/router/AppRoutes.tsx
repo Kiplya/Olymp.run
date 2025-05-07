@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from 'react-router'
 
 import { useAuth } from '../context/AuthContext'
 
-interface RouteConfig {
+type RouteConfig = {
   path: string
   element: ReactElement
 }

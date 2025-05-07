@@ -1,27 +1,34 @@
-import { createContext, ReactNode, useContext, useState } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 
-interface AuthContextType {
-  isAuth: boolean
-  login: () => void
-  logout: () => void
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext({
+  isAuth: false,
+  login: () => {},
+  logout: () => {},
+})
 
 export const useAuth = () => {
   const context = useContext(AuthContext)
-
-  if (!context) {
-    throw new Error('useAuth must be used via AuthProvider')
-  }
-
   return context
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuth, setIsAuth] = useState(false)
-  const login = () => setIsAuth(true)
-  const logout = () => setIsAuth(false)
 
-  return <AuthContext.Provider value={{ isAuth, login, logout }}>{children}</AuthContext.Provider>
+  const login = useCallback(() => {
+    setIsAuth(true)
+  }, [])
+  const logout = useCallback(() => {
+    setIsAuth(false)
+  }, [])
+
+  const value = useMemo(
+    () => ({
+      isAuth,
+      login,
+      logout,
+    }),
+    [isAuth, login, logout],
+  )
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

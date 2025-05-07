@@ -48,6 +48,7 @@ h1 {
 }
 
 img {
+  -webkit-tap-highlight-color: transparent;
   object-fit: contain;
   user-select: none;
 }

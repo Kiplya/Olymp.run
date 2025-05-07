@@ -1,13 +1,20 @@
 FROM node:alpine
 
+ARG SHARED_PATH
+ENV SHARED_PATH=${SHARED_PATH}
+ARG PORT
+ENV PORT=${PORT}
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
+
 WORKDIR /app
-COPY package.json ./
+COPY ./frontend/package.json ./
 EXPOSE 3000
 
 RUN npm install
-COPY . .
-RUN npm run build
 
-RUN mkdir -p /frontend_build
-RUN npm run build && cp -r build/* /frontend_build
-VOLUME ["/frontend_build"]
+COPY ./frontend .
+COPY ./shared ./shared
+
+RUN npm run build
+RUN mv dist /frontend_build

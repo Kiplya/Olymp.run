@@ -1,0 +1,29 @@
+.loaderDiv {
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100dvw;
+  align-items: center;
+  justify-content: center;
+  background-color: #212121;
+}
+
+.loaderDiv div {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  border-top: 0.15rem solid rgb(246, 246, 246);
+  border-right: 0.15rem solid transparent;
+  animation: rotation 1.5s ease-in-out infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
