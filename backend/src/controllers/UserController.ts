@@ -8,7 +8,7 @@ import {
   EmptyResponse,
 } from "@shared/apiTypes";
 import { authorize } from "../utils/user";
-import { resServerError } from "../utils/common";
+import { loginDataValidation, resServerError } from "../utils/common";
 
 export default class UserController {
   static async login(
@@ -16,9 +16,13 @@ export default class UserController {
     res: Response<BaseResponse>
   ) {
     try {
-      const sessionId = await UserService.login(req.body);
+      if (!loginDataValidation(req, res)) {
+        return;
+      }
 
-      if (!sessionId) {
+      const sessionToken = await UserService.login(req.body);
+
+      if (!sessionToken) {
         res
           .status(ResponseStatus.INVALID_CREDENTIALS)
           .json({ message: "Invalid credentials" });
@@ -26,7 +30,7 @@ export default class UserController {
         return;
       }
 
-      res.cookie(Constants.SESSION_COOKIE_NAME, sessionId, {
+      res.cookie(Constants.SESSION_COOKIE_NAME, sessionToken, {
         httpOnly: true,
         sameSite: "lax",
         secure: false,
@@ -39,10 +43,10 @@ export default class UserController {
 
   static async logout(req: Request, res: Response<EmptyResponse>) {
     try {
-      const sessionId = req.cookies?.[Constants.SESSION_COOKIE_NAME];
-      if (sessionId) {
+      const sessionToken = req.cookies?.[Constants.SESSION_COOKIE_NAME];
+      if (sessionToken) {
         res.clearCookie(Constants.SESSION_COOKIE_NAME);
-        await UserService.logout(sessionId);
+        await UserService.logout(sessionToken);
       }
       res.status(ResponseStatus.NO_CONTENT).send();
     } catch (err: any) {
@@ -55,7 +59,24 @@ export default class UserController {
     res: Response<BaseResponse>
   ) {
     try {
+      if (!loginDataValidation(req, res)) {
+        return;
+      }
+
+      await UserService.register(req.body);
+
+      res
+        .status(ResponseStatus.SUCCESS)
+        .json({ message: "Successful registered" });
     } catch (err: any) {
+      if (err?.code === "P2002") {
+        console.error(err);
+        res
+          .status(ResponseStatus.INVALID_CREDENTIALS)
+          .json({ message: "Login is already taken" });
+
+        return;
+      }
       resServerError(res, err);
     }
   }
@@ -66,18 +87,19 @@ export default class UserController {
     next?: NextFunction
   ) {
     try {
-      const sessionId = req.cookies?.[Constants.SESSION_COOKIE_NAME];
-      if (!sessionId) {
+      const sessionToken = req.cookies?.[Constants.SESSION_COOKIE_NAME];
+      if (!sessionToken) {
         res
           .status(ResponseStatus.UNAUTHORIZED)
           .json({ message: "Unauthorized" });
         return;
       }
 
-      const isAuthorized = await authorize(sessionId);
+      const isAuthorized = await authorize(sessionToken);
       if (!isAuthorized) {
         res.clearCookie(Constants.SESSION_COOKIE_NAME);
-        await UserService.logout(sessionId);
+        await UserService.logout(sessionToken);
+
         res
           .status(ResponseStatus.UNAUTHORIZED)
           .json({ message: "Session expired or invalid" });

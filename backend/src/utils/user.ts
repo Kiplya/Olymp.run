@@ -1,15 +1,18 @@
 import { PrismaClient } from "@prisma/client";
+import { decrypt } from "./crypt";
 
 const prisma = new PrismaClient();
 
-export const authorize = async (sessionId: string) => {
+export const authorize = async (sessionToken: string) => {
   try {
+    const rawToken = decrypt(sessionToken);
+
     const session = await prisma.sessions.findUnique({
-      where: { id: sessionId },
+      where: { token: rawToken },
     });
 
     if (!session) {
-      return false;
+      throw new Error(`Token ${sessionToken} is illegal`);
     }
 
     const user = await prisma.users.findUnique({
@@ -17,7 +20,7 @@ export const authorize = async (sessionId: string) => {
     });
 
     if (!user) {
-      throw new Error(`User with sid ${sessionId} not found`);
+      throw new Error(`User with token ${rawToken} not found`);
     }
 
     return true;

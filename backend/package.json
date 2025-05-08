@@ -15,6 +15,7 @@
     "bcryptjs": "latest",
     "cookie-parser": "latest",
     "cors": "latest",
+    "crypto": "latest",
     "dotenv": "latest",
     "express": "latest",
     "pg": "latest",

@@ -9,14 +9,15 @@ datasource db {
 
 model sessions {
   id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  token      String    @db.Text @unique
   user_id    String    @db.Uuid
-  created_at DateTime @default(now()) @db.Timestamptz(0)
-  user      users     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  created_at DateTime  @default(now()) @db.Timestamptz(0)
+  user      users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model users {
-  id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  login    String     @unique
-  password String
+  id       String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  login    String      @db.Text @unique
+  password String      @db.Text
   sessions sessions[]
 }

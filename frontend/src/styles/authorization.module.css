@@ -9,23 +9,23 @@
 }
 
 .authDiv form {
-  padding: 3dvh;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  border: 0.05dvh solid rgb(100, 100, 100);
-  border-radius: 3dvh;
+  border: 0.05rem solid rgb(100, 100, 100);
+  border-radius: 1.5rem;
 }
 
 .authDiv form input {
-  padding: 1dvh;
+  padding: 0.5rem;
   width: 15rem;
   background-color: rgb(70, 70, 70);
   font-family: 'Inter';
   color: rgb(246, 246, 246);
   font-size: var(--font-small);
-  border: 0.05dvh solid rgb(70, 70, 70);
+  border: 0.05rem solid transparent;
 }
 
 .authDiv form input::placeholder {
@@ -43,13 +43,12 @@
 }
 
 .authBtn {
-  padding: 1dvh;
-  width: fit-content;
+  padding: 0.5rem;
   background-color: transparent;
   color: rgb(246, 246, 246);
   font-size: var(--font-small);
-  border: 0.05dvh solid rgb(130, 130, 130);
-  border-radius: 1dvh;
+  border: 0.05rem solid rgb(130, 130, 130);
+  border-radius: 0.5rem;
 }
 
 @media (hover: hover) {

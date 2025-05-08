@@ -1,6 +1,8 @@
 import { PrismaClient, sessions, users } from "@prisma/client";
 import { LoginRequest } from "@shared/apiTypes";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { encrypt, decrypt, hash } from "../utils/crypt";
 
 const prisma = new PrismaClient();
 
@@ -19,16 +21,21 @@ export default class UserService {
       return null;
     }
 
-    const session: sessions = await prisma.sessions.create({
-      data: { user_id: user.id },
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const encryptedToken = encrypt(rawToken);
+
+    await prisma.sessions.create({
+      data: { user_id: user.id, token: rawToken },
     });
 
-    return session.id;
+    return encryptedToken;
   }
 
-  static async logout(sessionId: string) {
+  static async logout(sessionToken: string) {
+    const rawToken = decrypt(sessionToken);
+
     const session = await prisma.sessions.findUnique({
-      where: { id: sessionId },
+      where: { token: rawToken },
     });
 
     if (!session) {
@@ -36,9 +43,15 @@ export default class UserService {
     }
 
     await prisma.sessions.delete({
-      where: { id: sessionId },
+      where: { token: rawToken },
     });
   }
 
-  static async register({ login, password }: LoginRequest) {}
+  static async register({ login, password }: LoginRequest) {
+    const hashedPassword = await hash(password);
+
+    await prisma.users.create({
+      data: { login, password: hashedPassword },
+    });
+  }
 }
