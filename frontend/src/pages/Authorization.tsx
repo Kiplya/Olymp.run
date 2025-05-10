@@ -1,34 +1,24 @@
-import { BaseResponse, Endpoints, LoginRequest } from '@shared/apiTypes'
-import { FC, FormEvent, useState } from 'react'
+import { FC, FormEvent, useEffect, useState } from 'react'
 
+import { useLoginMutation } from '../api/userApi'
 import CommonButton from '../components/CommonButton'
 import CommonTextInput from '../components/CommonTextInput'
-import { useAuth } from '../context/AuthContext'
-import useApiRequest from '../hooks/useApiRequest'
 import cl from '../styles/authorization.module.css'
 import { getStatusMessage } from '../utils/common'
 
 const Authorization: FC = () => {
-  const { login: loginMethod } = useAuth()
+  const [loginMutation, { isError, error }] = useLoginMutation()
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
-  const { status, request } = useApiRequest<BaseResponse, LoginRequest>(
-    Endpoints.LOGIN,
-    { login, password },
-    {
-      onSuccess: () => {
-        loginMethod()
-      },
-      onFinally: () => {
-        setLogin('')
-        setPassword('')
-      },
-    },
-  )
+
+  useEffect(() => {
+    setLogin('')
+    setPassword('')
+  }, [isError])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    request()
+    loginMutation({ login, password })
   }
 
   return (
@@ -51,7 +41,7 @@ const Authorization: FC = () => {
         <CommonButton className={cl.authBtn} label='Вход' type='submit' disabled={!login || !password} />
       </form>
 
-      <p style={{ opacity: status ? '1' : '0' }}>{getStatusMessage(status)}</p>
+      <p style={{ opacity: error ? '1' : '0' }}>{getStatusMessage(isError && 'status' in error ? error.status : 0)}</p>
     </div>
   )
 }

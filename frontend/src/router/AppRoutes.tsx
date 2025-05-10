@@ -1,7 +1,7 @@
 import { FC, ReactElement } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
 
-import { useAuth } from '../context/AuthContext'
+import useAppSelector from '../hooks/useAppSelector'
 
 type RouteConfig = {
   path: string
@@ -13,7 +13,7 @@ interface AppRoutesProps {
 }
 
 const AppRoutes: FC<AppRoutesProps> = ({ routes }) => {
-  const { isAuth } = useAuth()
+  const isAuth = useAppSelector((state) => state.authSlice.isAuth)
 
   return (
     <Routes>

@@ -6,14 +6,17 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/react-redux": "latest",
     "@vitejs/plugin-react": "latest",
     "axios": "latest",
     "dotenv": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-redux": "latest",
     "react-router": "latest",
     "typescript": "latest",
     "vite": "latest"

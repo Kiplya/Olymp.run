@@ -5,11 +5,10 @@ import AppRoutes from './AppRoutes'
 import { publicRoutes, privateRoutes } from './routes'
 
 import PageLayout from '../components/PageLayout'
-
-import { useAuth } from '../context/AuthContext'
+import useAppSelector from '../hooks/useAppSelector'
 
 const AppRouter: FC = () => {
-  const { isAuth } = useAuth()
+  const isAuth = useAppSelector((state) => state.authSlice.isAuth)
 
   return (
     <BrowserRouter>

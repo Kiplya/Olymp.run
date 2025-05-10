@@ -107,7 +107,9 @@ export default class UserController {
       }
 
       if (!next) {
-        res.status(ResponseStatus.SUCCESS).send();
+        res
+          .status(ResponseStatus.SUCCESS)
+          .json({ message: "Session is valid" });
         return;
       }
 

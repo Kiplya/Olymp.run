@@ -1,32 +1,23 @@
-import { Endpoints } from '@shared/apiTypes'
-import { FC, MouseEvent, useCallback, useState } from 'react'
+import { FC, useCallback, useState } from 'react'
 
 import Modal from './Modal'
 
-import { useAuth } from '../context/AuthContext'
-import useApiRequest from '../hooks/useApiRequest'
+import { useLogoutMutation } from '../api/userApi'
+import useAppSelector from '../hooks/useAppSelector'
+
 import cl from '../styles/headerFooter.module.css'
 
 const Header: FC = () => {
-  const { isAuth, logout } = useAuth()
   const [isShowModal, setShowModal] = useState(false)
+  const [logoutMutation] = useLogoutMutation()
+  const isAuth = useAppSelector((state) => state.authSlice.isAuth)
   const openModal = useCallback(() => setShowModal(true), [])
   const closeModal = useCallback(() => setShowModal(false), [])
 
-  const { request } = useApiRequest(
-    Endpoints.LOGOUT,
-    {},
-    {
-      onSuccess: () => {
-        logout()
-      },
-    },
-  )
-
   const confirmLogout = useCallback(() => {
-    request()
+    logoutMutation()
     closeModal()
-  }, [request, closeModal])
+  }, [closeModal, logoutMutation])
 
   return (
     <>

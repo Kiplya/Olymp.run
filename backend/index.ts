@@ -22,11 +22,11 @@ app.use("/", router);
 
 const PORT = process.env.BACKEND_PORT;
 
-const appStart = async () => {
+const setupApp = async () => {
   await checkDbConnection();
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 };
 
-appStart();
+setupApp();

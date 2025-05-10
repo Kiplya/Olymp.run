@@ -6,13 +6,6 @@ export const ResponseStatus = {
   NO_CONTENT: 204,
 } as const;
 
-export const Endpoints = {
-  REGISTRATION: { method: "post", apiUrl: "/registration" },
-  LOGIN: { method: "post", apiUrl: "/login" },
-  LOGOUT: { method: "post", apiUrl: "/logout" },
-  AUTH: { method: "get", apiUrl: "/auth" },
-} as const;
-
 export type LoginRequest = {
   login: string;
   password: string;

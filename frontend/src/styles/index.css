@@ -6,6 +6,8 @@
 }
 
 html {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
   font-size: 1em;
 }
 
@@ -48,18 +50,11 @@ h1 {
 }
 
 img {
-  -webkit-tap-highlight-color: transparent;
   object-fit: contain;
   user-select: none;
 }
 
 button {
-  -webkit-tap-highlight-color: transparent;
   user-select: none;
-  outline: none;
   cursor: pointer;
-}
-
-input {
-  outline: none;
 }
