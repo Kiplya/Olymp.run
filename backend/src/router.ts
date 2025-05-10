@@ -1,8 +1,14 @@
+import dotenv from "dotenv";
 import { Router } from "express";
 import UserController from "./controllers/UserController";
 import { ResponseStatus } from "@shared/apiTypes";
 
+dotenv.config();
 const router = Router();
+
+if (process.env.MODE === "development") {
+  router.post("/registration", UserController.register);
+}
 
 router.get("/isAuth", UserController.authMiddleware, (_, res) => {
   res.sendStatus(ResponseStatus.NO_CONTENT);
@@ -16,7 +22,6 @@ router.get(
   }
 );
 
-router.post("/registration", UserController.register); // Will be moved to admin
 router.post("/login", UserController.login);
 router.post("/logout", UserController.authMiddleware, UserController.logout);
 

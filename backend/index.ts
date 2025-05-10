@@ -8,13 +8,14 @@ import cors from "cors";
 dotenv.config();
 const app = express();
 
-// Only for dev
-app.use(
-  cors({
-    origin: "http://localhost:1000",
-    credentials: true,
-  })
-);
+if (process.env.MODE === "development") {
+  app.use(
+    cors({
+      origin: "http://localhost:1000",
+      credentials: true,
+    })
+  );
+}
 
 app.use(express.json());
 app.use(cookieParser());
