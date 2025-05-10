@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { LoginRequest } from '@shared/apiTypes'
 
-import { login, logout } from '../store/reducers/AuthSlice'
+import { setIsAuth, setIsAdmin } from '../store/reducers/AuthSlice'
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -12,14 +12,27 @@ export const userApi = createApi({
   }),
   endpoints: (builder) => ({
     checkAuth: builder.query<void, void>({
-      query: () => '/auth',
+      query: () => '/isAuth',
 
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled
-          dispatch(login())
+          dispatch(setIsAuth(true))
         } catch {
-          dispatch(logout())
+          dispatch(setIsAuth(false))
+        }
+      },
+    }),
+
+    checkAdmin: builder.query<void, void>({
+      query: () => '/isAdmin',
+
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          dispatch(setIsAdmin(true))
+        } catch {
+          dispatch(setIsAdmin(false))
         }
       },
     }),
@@ -34,7 +47,7 @@ export const userApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled
-          dispatch(login())
+          dispatch(setIsAuth(true))
         } catch {}
       },
     }),
@@ -48,11 +61,12 @@ export const userApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled
-          dispatch(logout())
+          dispatch(setIsAuth(false))
+          dispatch(setIsAdmin(false))
         } catch {}
       },
     }),
   }),
 })
 
-export const { useCheckAuthQuery, useLoginMutation, useLogoutMutation } = userApi
+export const { useCheckAuthQuery, useLoginMutation, useLogoutMutation, useCheckAdminQuery } = userApi

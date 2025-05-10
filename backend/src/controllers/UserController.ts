@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import UserService from "../services/UserService";
 import { Constants } from "../Constants";
+import { users } from "@prisma/client";
 import {
   LoginRequest,
   BaseResponse,
@@ -36,7 +37,7 @@ export default class UserController {
         secure: false,
       });
       res.status(ResponseStatus.SUCCESS).json({ message: "Logged in" });
-    } catch (err: any) {
+    } catch (err) {
       resServerError(res, err);
     }
   }
@@ -48,8 +49,8 @@ export default class UserController {
         res.clearCookie(Constants.SESSION_COOKIE_NAME);
         await UserService.logout(sessionToken);
       }
-      res.status(ResponseStatus.NO_CONTENT).send();
-    } catch (err: any) {
+      res.sendStatus(ResponseStatus.NO_CONTENT);
+    } catch (err) {
       resServerError(res, err);
     }
   }
@@ -82,9 +83,9 @@ export default class UserController {
   }
 
   static async authMiddleware(
-    req: Request,
+    req: Request & { user?: users },
     res: Response<BaseResponse>,
-    next?: NextFunction
+    next: NextFunction
   ) {
     try {
       const sessionToken = req.cookies?.[Constants.SESSION_COOKIE_NAME];
@@ -95,7 +96,7 @@ export default class UserController {
         return;
       }
 
-      const isAuthorized = await authorize(sessionToken);
+      const { user, isAuthorized } = await authorize(sessionToken);
       if (!isAuthorized) {
         res.clearCookie(Constants.SESSION_COOKIE_NAME);
         await UserService.logout(sessionToken);
@@ -106,22 +107,27 @@ export default class UserController {
         return;
       }
 
-      if (!next) {
-        res
-          .status(ResponseStatus.SUCCESS)
-          .json({ message: "Session is valid" });
-        return;
-      }
-
+      req.user = user!;
       next();
-    } catch (err: any) {
+    } catch (err) {
       resServerError(res, err);
     }
   }
 
-  static async checkAuth(req: Request, res: Response<EmptyResponse>) {
+  static async adminMiddleware(
+    req: Request & { user?: users },
+    res: Response<BaseResponse>,
+    next: NextFunction
+  ) {
     try {
-      await UserController.authMiddleware(req, res);
+      if (!req?.user?.isAdmin) {
+        res
+          .status(ResponseStatus.FORBIDDEN)
+          .json({ message: "Admin access required" });
+        return;
+      }
+
+      next();
     } catch (err) {
       resServerError(res, err);
     }

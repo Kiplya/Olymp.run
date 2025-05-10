@@ -17,6 +17,7 @@
 .logoImg {
   height: 80%;
   max-width: 50%;
+  cursor: pointer;
 }
 
 .footer p {
@@ -24,16 +25,29 @@
   text-align: center;
 }
 
-.logoutBtn {
+.btn {
   position: absolute;
-  right: 2%;
   aspect-ratio: 1/1;
   height: 50%;
   cursor: pointer;
 }
 
+.logoutBtn {
+  right: 2%;
+}
+
+.adminBtn {
+  left: 2%;
+}
+
 @media (orientation: portrait) {
-  .logoutBtn {
+  .btn {
     height: 40%;
+  }
+}
+
+@media (hover: none) {
+  .adminBtn {
+    visibility: hidden;
   }
 }

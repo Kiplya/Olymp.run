@@ -1,7 +1,7 @@
 import { BaseResponse, ResponseStatus, LoginRequest } from "@shared/apiTypes";
 import { Response, Request } from "express";
 
-export const resServerError = (res: Response, err: any) => {
+export const resServerError = (res: Response<BaseResponse>, err: any) => {
   console.error(err);
   res
     .status(ResponseStatus.INTERNAL_SERVER_ERROR)

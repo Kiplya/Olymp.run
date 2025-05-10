@@ -7,7 +7,7 @@ export const getStatusMessage = (status: number | string) => {
     case ResponseStatus.INTERNAL_SERVER_ERROR:
       return 'Internal server error'
     case 'FETCH_ERROR':
-      return 'Ошибка сети'
+      return 'Ethernet error'
     default:
       return ''
   }

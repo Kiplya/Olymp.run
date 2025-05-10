@@ -2,15 +2,21 @@ import { FC, ReactNode } from 'react'
 
 import Loader from './Loader'
 
-import { useCheckAuthQuery } from '../api/userApi'
+import { useCheckAdminQuery, useCheckAuthQuery } from '../api/userApi'
+import useAppSelector from '../hooks/useAppSelector'
 
 interface ApiControllerProps {
   children: ReactNode
 }
 
 const ApiController: FC<ApiControllerProps> = ({ children }) => {
-  const { isLoading } = useCheckAuthQuery()
-  return <>{isLoading ? <Loader /> : children}</>
+  const isAuth = useAppSelector((state) => state.authSlice.isAuth)
+  const { isLoading: isLoadingAuth } = useCheckAuthQuery()
+  const { isLoading: isLoadingAdmin } = useCheckAdminQuery(undefined, {
+    skip: !isAuth,
+  })
+
+  return <>{isLoadingAuth || isLoadingAdmin ? <Loader /> : children}</>
 }
 
 export default ApiController

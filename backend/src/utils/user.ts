@@ -23,9 +23,9 @@ export const authorize = async (sessionToken: string) => {
       throw new Error(`User with token ${rawToken} not found`);
     }
 
-    return true;
+    return { user, isAuthorized: true };
   } catch (err) {
     console.error(err);
-    return false;
+    return { user: null, isAuthorized: false };
   }
 };

@@ -19,5 +19,6 @@ model users {
   id       String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   login    String      @db.Text @unique
   password String      @db.Text
+  isAdmin Boolean      @default(false)
   sessions sessions[]
 }

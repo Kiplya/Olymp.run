@@ -3,11 +3,11 @@
   padding: 0;
   box-sizing: border-box;
   border: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
 html {
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
   font-size: 1em;
 }
 
