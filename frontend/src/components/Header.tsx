@@ -1,6 +1,7 @@
 import { FC, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router'
 
+import DropdownMenu, { DropdownMenuOption } from './DropdownMenu'
 import Modal from './Modal'
 
 import { useLogoutMutation } from '../api/userApi'
@@ -9,6 +10,21 @@ import useAppSelector from '../hooks/useAppSelector'
 import cl from '../styles/headerFooter.module.css'
 
 const Header: FC = () => {
+  const dropdownMenuOptions: DropdownMenuOption[] = [
+    {
+      label: 'Создать контест',
+      onClick: () => {
+        navigate('/admin/contest')
+      },
+    },
+    {
+      label: 'Создать задачу',
+      onClick: () => {
+        navigate('/admin/task')
+      },
+    },
+  ]
+
   const navigate = useNavigate()
   const [isShowModal, setShowModal] = useState(false)
   const [logoutMutation] = useLogoutMutation()
@@ -36,12 +52,7 @@ const Header: FC = () => {
           <img className={`${cl.logoutBtn} ${cl.btn}`} src='/img/logoutButton.webp' alt='' onClick={openModal} />
         )}
         {isAdmin && (
-          <img
-            className={`${cl.adminBtn} ${cl.btn}`}
-            src='/img/adminButton.webp'
-            alt=''
-            onClick={() => navigate('/admin')}
-          />
+          <DropdownMenu className={cl.dropdown} options={dropdownMenuOptions} imgUrl='/img/adminButton.webp' />
         )}
       </div>
 

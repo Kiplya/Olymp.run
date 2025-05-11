@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 
-import AdminPanel from '../pages/AdminPanel'
+import AdminContest from '../pages/AdminContest'
+import AdminTask from '../pages/AdminTask'
 import Authorization from '../pages/Authorization'
 import Contests from '../pages/Contests'
 
@@ -13,4 +14,7 @@ export const privateRoutes: AppRoute[] = [{ path: '/contests', element: <Contest
 
 export const publicRoutes: AppRoute[] = [{ path: '/login', element: <Authorization /> }]
 
-export const adminRoutes: AppRoute[] = [{ path: '/admin', element: <AdminPanel /> }]
+export const adminRoutes: AppRoute[] = [
+  { path: '/admin/contest', element: <AdminContest /> },
+  { path: '/admin/task', element: <AdminTask /> },
+]

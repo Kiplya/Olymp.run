@@ -1,8 +1,10 @@
 .button {
+  font-family: 'Inter';
+  width: fit-content;
   padding: 0.5rem;
   border-radius: 1rem;
   color: rgb(246, 246, 246);
-  background-color: rgb(31, 31, 31);
+  background-color: rgb(70, 70, 70);
   font-size: var(--font-small);
 }
 

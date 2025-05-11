@@ -1,0 +1,16 @@
+.textInput {
+  width: 10rem;
+  font-family: 'Inter';
+  color: rgb(246, 246, 246);
+  font-size: var(--font-small);
+  border: 0.05rem solid transparent;
+  background-color: rgb(70, 70, 70);
+}
+
+.textInput::placeholder {
+  color: rgb(246, 246, 246);
+}
+
+.textInput:focus {
+  border-color: rgb(100, 100, 100);
+}

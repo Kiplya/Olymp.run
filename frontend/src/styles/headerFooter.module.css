@@ -36,18 +36,20 @@
   right: 2%;
 }
 
-.adminBtn {
+.dropdown {
+  height: 50%;
   left: 2%;
 }
 
 @media (orientation: portrait) {
-  .btn {
+  .btn,
+  .dropdown {
     height: 40%;
   }
 }
 
 @media (hover: none) {
-  .adminBtn {
+  .dropdown {
     visibility: hidden;
   }
 }

@@ -38,7 +38,7 @@ const Authorization: FC = () => {
           onChange={(e) => setPassword(e.currentTarget.value.trim())}
           placeholder='Пароль'
         />
-        <CommonButton className={cl.authBtn} label='Вход' type='submit' disabled={!login || !password} />
+        <CommonButton label='Вход' type='submit' disabled={!login || !password} />
       </form>
 
       <p style={{ opacity: error ? '1' : '0' }}>{getStatusMessage(isError && 'status' in error ? error.status : 0)}</p>

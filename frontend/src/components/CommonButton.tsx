@@ -1,12 +1,12 @@
-import { FC } from 'react'
+import { FC, MouseEvent } from 'react'
 
 import cl from '../styles/button.module.css'
 
 interface CommonButtonProps {
   label: string
   type: 'button' | 'submit' | 'reset'
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void
   className?: string
-  onClick?: () => void
   disabled?: boolean
 }
 

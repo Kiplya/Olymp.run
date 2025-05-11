@@ -9,6 +9,7 @@ const publicRouter = Router();
 if (process.env.MODE === "development") {
   publicRouter.post("/adminRegistration", registerAdmin);
 }
+
 publicRouter.post("/login", UserController.login);
 
 export default publicRouter;

@@ -8,6 +8,7 @@ authRouter.use(UserController.authMiddleware);
 authRouter.get("/isAuth", (_, res) => {
   res.sendStatus(ResponseStatus.NO_CONTENT);
 });
+
 authRouter.post("/logout", UserController.logout);
 
 export default authRouter;

@@ -9,6 +9,8 @@ adminRouter.use(UserController.adminMiddleware);
 adminRouter.get("/isAdmin", (_, res) => {
   res.sendStatus(ResponseStatus.NO_CONTENT);
 });
+
 adminRouter.delete("/deleteUser", UserController.delete);
+adminRouter.post("/registration", UserController.register);
 
 export default adminRouter;

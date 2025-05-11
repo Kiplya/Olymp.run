@@ -48,6 +48,8 @@ export const userApi = createApi({
         try {
           await queryFulfilled
           dispatch(setIsAuth(true))
+
+          await dispatch(userApi.endpoints.checkAdmin.initiate(undefined, { forceRefetch: true }))
         } catch {}
       },
     }),

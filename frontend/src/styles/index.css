@@ -49,6 +49,10 @@ h1 {
   font-size: var(--font-large);
 }
 
+ul {
+  list-style: none;
+}
+
 img {
   object-fit: contain;
   user-select: none;
