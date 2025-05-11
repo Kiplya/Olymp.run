@@ -12,7 +12,7 @@ export const userApi = createApi({
   }),
   endpoints: (builder) => ({
     checkAuth: builder.query<void, void>({
-      query: () => '/isAuth',
+      query: () => '/auth/isAuth',
 
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
@@ -25,7 +25,7 @@ export const userApi = createApi({
     }),
 
     checkAdmin: builder.query<void, void>({
-      query: () => '/isAdmin',
+      query: () => '/admin/isAdmin',
 
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
@@ -39,7 +39,7 @@ export const userApi = createApi({
 
     login: builder.mutation<void, LoginRequest>({
       query: (credentials) => ({
-        url: '/login',
+        url: '/public/login',
         method: 'POST',
         body: credentials,
       }),
@@ -54,7 +54,7 @@ export const userApi = createApi({
 
     logout: builder.mutation<void, void>({
       query: () => ({
-        url: '/logout',
+        url: '/auth/logout',
         method: 'POST',
       }),
 

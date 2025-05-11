@@ -1,5 +1,5 @@
-import { PrismaClient, sessions, users } from "@prisma/client";
-import { LoginRequest } from "@shared/apiTypes";
+import { PrismaClient, users } from "@prisma/client";
+import { DeleteRequest, LoginRequest } from "@shared/apiTypes";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { encrypt, decrypt, hash } from "../utils/crypt";
@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export default class UserService {
   static async login({ login, password }: LoginRequest) {
-    const user: users | null = await prisma.users.findUnique({
+    const user = await prisma.users.findUnique({
       where: { login },
     });
 
@@ -53,5 +53,17 @@ export default class UserService {
     await prisma.users.create({
       data: { login, password: hashedPassword },
     });
+  }
+
+  static async delete({ login }: DeleteRequest) {
+    const user = await prisma.users.findUnique({ where: { login } });
+    if (!user) {
+      return false;
+    }
+
+    await prisma.users.delete({
+      where: { login },
+    });
+    return true;
   }
 }

@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
-import router from "./src/router";
+import router from "./src/routers/index";
 import cookieParser from "cookie-parser";
 import { checkDbConnection } from "./src/utils/db";
 import cors from "cors";

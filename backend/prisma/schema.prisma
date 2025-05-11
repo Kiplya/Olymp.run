@@ -12,6 +12,7 @@ model sessions {
   token      String    @db.Text @unique
   user_id    String    @db.Uuid
   created_at DateTime  @default(now()) @db.Timestamptz(0)
+
   user      users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
@@ -20,5 +21,28 @@ model users {
   login    String      @db.Text @unique
   password String      @db.Text
   isAdmin Boolean      @default(false)
+
   sessions sessions[]
+  competitions competition_participant[]
+}
+
+model competition {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String      @db.Text
+  startTime     DateTime    @db.Timestamptz(0)
+  endTime       DateTime    @db.Timestamptz(0)
+
+  participants  competition_participant[]
+}
+
+model competition_participant {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String       @db.Uuid
+  competitionId  String       @db.Uuid
+  score          Int          @default(0)
+
+  user           users        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  competition    competition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, competitionId])
 }

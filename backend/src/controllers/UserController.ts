@@ -7,9 +7,12 @@ import {
   BaseResponse,
   ResponseStatus,
   EmptyResponse,
+  RegistrationRequest,
+  RegistrationResponse,
+  DeleteRequest,
 } from "@shared/apiTypes";
-import { authorize } from "../utils/user";
-import { loginDataValidation, resServerError } from "../utils/common";
+import { userDataValidation, authorize } from "../utils/user";
+import { resServerError } from "../utils/common";
 
 export default class UserController {
   static async login(
@@ -17,7 +20,7 @@ export default class UserController {
     res: Response<BaseResponse>
   ) {
     try {
-      if (!loginDataValidation(req, res)) {
+      if (!userDataValidation(req, res)) {
         return;
       }
 
@@ -56,28 +59,56 @@ export default class UserController {
   }
 
   static async register(
-    req: Request<{}, {}, LoginRequest>,
-    res: Response<BaseResponse>
+    req: Request<{}, {}, RegistrationRequest>,
+    res: Response<RegistrationResponse | BaseResponse>
   ) {
     try {
-      if (!loginDataValidation(req, res)) {
+      if (!userDataValidation(req, res)) {
         return;
       }
 
       await UserService.register(req.body);
 
-      res
-        .status(ResponseStatus.SUCCESS)
-        .json({ message: "Successful registered" });
+      res.status(ResponseStatus.SUCCESS).json({
+        login: req.body.login,
+        password: req.body.password,
+      });
     } catch (err: any) {
       if (err?.code === "P2002") {
         console.error(err);
         res
           .status(ResponseStatus.INVALID_CREDENTIALS)
           .json({ message: "Login is already taken" });
-
         return;
       }
+      resServerError(res, err);
+    }
+  }
+
+  static async delete(
+    req: Request<{}, {}, DeleteRequest>,
+    res: Response<BaseResponse>
+  ) {
+    try {
+      if (!req.body.login.trim()) {
+        res
+          .status(ResponseStatus.INVALID_CREDENTIALS)
+          .json({ message: "Login is undefined" });
+        return;
+      }
+
+      const isDeleted = await UserService.delete(req.body);
+      if (!isDeleted) {
+        res
+          .status(ResponseStatus.INVALID_CREDENTIALS)
+          .json({ message: `User ${req.body.login} not found` });
+        return;
+      }
+
+      res
+        .status(ResponseStatus.SUCCESS)
+        .json({ message: `User ${req.body.login} successfully deleted` });
+    } catch (err) {
       resServerError(res, err);
     }
   }

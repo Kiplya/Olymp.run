@@ -12,6 +12,13 @@ export type LoginRequest = {
   password: string;
 };
 
+export type RegistrationRequest = LoginRequest;
+export type RegistrationResponse = LoginRequest;
+
+export type DeleteRequest = {
+  login: string;
+};
+
 export type BaseResponse = {
   message: string;
 };
