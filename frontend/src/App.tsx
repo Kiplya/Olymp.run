@@ -1,15 +1,15 @@
 import { FC } from 'react'
 import { Provider } from 'react-redux'
 
-import ApiController from './components/ApiController'
+import AuthController from './components/AuthController'
 import AppRouter from './router/AppRouter'
 import { setupStore } from './store/index'
 
 const App: FC = () => (
   <Provider store={setupStore()}>
-    <ApiController>
+    <AuthController>
       <AppRouter />
-    </ApiController>
+    </AuthController>
   </Provider>
 )
 

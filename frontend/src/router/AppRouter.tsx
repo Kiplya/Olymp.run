@@ -1,12 +1,9 @@
 import { FC } from 'react'
-import { BrowserRouter } from 'react-router'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router'
 
-import AppRoutes from './AppRoutes'
 import { publicRoutes, privateRoutes, adminRoutes } from './routes'
 
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import PageLayout from '../components/PageLayout'
+import RouterLayout from '../components/RouterLayout'
 import useAppSelector from '../hooks/useAppSelector'
 
 const AppRouter: FC = () => {
@@ -18,15 +15,20 @@ const AppRouter: FC = () => {
     routes = isAdmin ? [...privateRoutes, ...adminRoutes] : privateRoutes
   }
 
-  return (
-    <BrowserRouter>
-      <Header />
-      <PageLayout>
-        <AppRoutes routes={routes} />
-      </PageLayout>
-      <Footer />
-    </BrowserRouter>
-  )
+  const router = createBrowserRouter([
+    {
+      element: <RouterLayout />,
+      children: [
+        ...routes,
+        {
+          path: '*',
+          element: <Navigate to={isAuth ? '/contests' : '/login'} replace />,
+        },
+      ],
+    },
+  ])
+
+  return <RouterProvider router={router} />
 }
 
 export default AppRouter

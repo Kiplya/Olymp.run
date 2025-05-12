@@ -1,7 +1,9 @@
-import { FC, useState } from 'react'
+import { FC, useState, FormEvent } from 'react'
+import { useBeforeUnload } from 'react-router'
 
 import CommonButton from '../components/CommonButton'
-import CommonTextInput from '../components/CommonTextInput'
+import CommonInput from '../components/CommonInput'
+import usePrompt from '../hooks/usePrompt'
 import cl from '../styles/adminContest.module.css'
 
 const AdminContest: FC = () => {
@@ -10,24 +12,45 @@ const AdminContest: FC = () => {
   const [endTime, setEndTime] = useState('')
   const [participantsCount, setParticipantsCount] = useState('')
 
+  const [isFormDirty, setIsFormDirty] = useState(false)
+  const isDisabled = contestName && startTime && endTime && participantsCount ? false : true
+
+  usePrompt(isFormDirty)
+  useBeforeUnload((e) => {
+    if (isFormDirty) {
+      e.preventDefault()
+    }
+  })
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+  }
+
   return (
     <div className={cl.adminDiv}>
       <h1>Создание контеста</h1>
-      <form onSubmit={() => {}}>
-        <div>
-          <p>Название:</p>
-          <CommonTextInput
-            type='text'
-            value={contestName}
-            onChange={(e) => {
-              setContestName(e.currentTarget.value.trim())
-            }}
-          />
-        </div>
+      <form onSubmit={handleSubmit} onChange={() => setIsFormDirty(true)}>
+        <CommonInput
+          placeholder='Название'
+          type='text'
+          value={contestName}
+          onChange={(e) => {
+            setContestName(e.currentTarget.value.trim())
+          }}
+        />
+
+        <CommonInput
+          placeholder='Количество участников'
+          type='number'
+          value={participantsCount}
+          onChange={(e) => {
+            setParticipantsCount(e.currentTarget.value)
+          }}
+        />
 
         <div>
           <p>Время начала: </p>
-          <CommonTextInput
+          <CommonInput
             type='datetime-local'
             value={startTime}
             onChange={(e) => {
@@ -38,7 +61,7 @@ const AdminContest: FC = () => {
 
         <div>
           <p>Время окончания: </p>
-          <CommonTextInput
+          <CommonInput
             type='datetime-local'
             value={endTime}
             onChange={(e) => {
@@ -47,18 +70,7 @@ const AdminContest: FC = () => {
           />
         </div>
 
-        <div>
-          <p>Количество участников: </p>
-          <CommonTextInput
-            type='text'
-            value={participantsCount}
-            onChange={(e) => {
-              setParticipantsCount(e.currentTarget.value)
-            }}
-          />
-        </div>
-
-        <CommonButton label='Создать' type='submit' disabled={false} />
+        <CommonButton label='Создать' type='submit' disabled={isDisabled} />
       </form>
     </div>
   )

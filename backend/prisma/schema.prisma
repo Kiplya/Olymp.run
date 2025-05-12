@@ -9,6 +9,7 @@ datasource db {
 
 model sessions {
   id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
   token      String    @db.Text @unique
   user_id    String    @db.Uuid
   created_at DateTime  @default(now()) @db.Timestamptz(0)
@@ -18,6 +19,7 @@ model sessions {
 
 model users {
   id       String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
   login    String      @db.Text @unique
   password String      @db.Text
   isAdmin Boolean      @default(false)
@@ -28,21 +30,60 @@ model users {
 
 model competition {
   id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
   title         String      @db.Text
   startTime     DateTime    @db.Timestamptz(0)
   endTime       DateTime    @db.Timestamptz(0)
 
+  tasks         competitionTask[]
   participants  competition_participant[]
 }
 
 model competition_participant {
-  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  score          Int          @default(0)
+
   userId         String       @db.Uuid
   competitionId  String       @db.Uuid
-  score          Int          @default(0)
 
   user           users        @relation(fields: [userId], references: [id], onDelete: Cascade)
   competition    competition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 
   @@unique([userId, competitionId])
+  @@id([userId, competitionId])
+}
+
+model competitionTask {
+  order         Int 
+
+  competitionId String       @db.Uuid
+  taskId        String       @db.Uuid
+
+  competition   competition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  task          task         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([competitionId, taskId])
+  @@id([competitionId, taskId])
+}
+
+model task {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  title          String       @db.Text
+  description    String       @db.Text
+
+  exampleInput   String       @db.Text
+  exampleOutput  String       @db.Text
+
+  competitions   competitionTask[]
+  tests          taskTest[]
+}
+
+model taskTest {
+  id                String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  input             String       @db.Text
+  expectedOutput    String       @db.Text
+
+  taskId            String       @db.Uuid
+  task              task         @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }

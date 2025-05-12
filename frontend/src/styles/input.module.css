@@ -1,5 +1,6 @@
 .textInput {
-  width: 10rem;
+  padding: 0.5rem;
+  width: fit-content;
   font-family: 'Inter';
   color: rgb(246, 246, 246);
   font-size: var(--font-small);

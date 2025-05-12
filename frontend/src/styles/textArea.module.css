@@ -1,0 +1,39 @@
+.textArea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+
+  font-family: 'Inter';
+  color: rgb(246, 246, 246);
+  font-size: var(--font-small);
+  border: 0.05rem solid transparent;
+  border-radius: 0.5rem;
+  background-color: rgb(70, 70, 70);
+}
+
+.textArea::placeholder {
+  color: rgb(246, 246, 246);
+}
+
+.textArea:focus {
+  border-color: rgb(100, 100, 100);
+}
+
+.textArea::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.textArea::-webkit-scrollbar-thumb {
+  background-color: rgb(150, 150, 150);
+  border-radius: 0.5rem;
+}
+
+.textArea::-webkit-scrollbar-track {
+  border-radius: 0.5rem;
+  background-color: transparent;
+}
+
+.textArea::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  background-color: rgb(120, 120, 120);
+}

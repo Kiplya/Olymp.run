@@ -2,7 +2,7 @@ import { FC, FormEvent, useEffect, useState } from 'react'
 
 import { useLoginMutation } from '../api/userApi'
 import CommonButton from '../components/CommonButton'
-import CommonTextInput from '../components/CommonTextInput'
+import CommonInput from '../components/CommonInput'
 import cl from '../styles/authorization.module.css'
 import { getStatusMessage } from '../utils/common'
 
@@ -26,13 +26,13 @@ const Authorization: FC = () => {
       <h1>Авторизация</h1>
 
       <form onSubmit={handleSubmit}>
-        <CommonTextInput
+        <CommonInput
           type='text'
           value={login}
           onChange={(e) => setLogin(e.currentTarget.value.trim())}
           placeholder='Логин'
         />
-        <CommonTextInput
+        <CommonInput
           type='password'
           value={password}
           onChange={(e) => setPassword(e.currentTarget.value.trim())}

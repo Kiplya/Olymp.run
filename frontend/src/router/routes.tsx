@@ -8,6 +8,7 @@ import Contests from '../pages/Contests'
 type AppRoute = {
   path: string
   element: ReactElement
+  children?: AppRoute[]
 }
 
 export const privateRoutes: AppRoute[] = [{ path: '/contests', element: <Contests /> }]
