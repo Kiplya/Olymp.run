@@ -73,7 +73,7 @@ export type ContestCreationRequest = {
   tasksId: string[];
 };
 
-export type ContestCreationResponse = LoginRequest[];
+export type ContestCreationResponse = string;
 
 export type ContestDeletionRequest = TaskDeletionRequest;
 

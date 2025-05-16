@@ -43,7 +43,8 @@ export default class ContestController {
       }
 
       const users = await ContestService.create(req.body);
-      res.status(ResponseStatus.SUCCESS).json(users);
+      const usersJson = JSON.stringify(users, null, 2)
+      res.status(ResponseStatus.SUCCESS).json(usersJson);
     } catch (err) {
       resServerError(res, err);
     }
