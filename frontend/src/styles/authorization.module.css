@@ -16,12 +16,6 @@
   border-radius: 1.5rem;
 }
 
-.authDiv p {
-  height: var(--font-medium);
-  transition: opacity 0.1s linear;
-  color: #ab2328;
-}
-
 .authDiv form button {
   background-color: transparent;
   border: 0.05rem solid rgb(130, 130, 130);

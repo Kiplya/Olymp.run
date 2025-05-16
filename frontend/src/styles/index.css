@@ -36,12 +36,15 @@ html {
 }
 
 p,
-h1 {
+h1,
+span {
   font-family: 'Inter';
+  line-height: 1.5;
   color: rgb(246, 246, 246);
 }
 
-p {
+p,
+span {
   font-size: var(--font-medium);
 }
 
@@ -66,4 +69,30 @@ button {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
+}
+
+.Toastify__toast {
+  font-size: var(--font-small);
+  font-family: 'Inter';
+  margin-bottom: 2dvh;
+  color: rgb(246, 246, 246);
+  background-color: rgb(60, 60, 60);
+  border: 0.05rem solid rgb(100, 100, 100);
+  border-radius: 1rem;
+  box-shadow: none;
+  width: fit-content;
+}
+
+.Toastify__close-button {
+  color: rgb(180, 180, 180);
+  opacity: revert;
+  transition: color 0.1s linear;
+}
+
+.Toastify__close-button:hover {
+  color: rgb(215, 215, 215);
+}
+
+.Toastify__toast-container {
+  margin-bottom: 3dvh;
 }

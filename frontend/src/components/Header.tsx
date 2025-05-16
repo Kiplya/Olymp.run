@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import DropdownMenu, { DropdownMenuOption } from './DropdownMenu'
@@ -10,22 +10,25 @@ import useAppSelector from '../hooks/useAppSelector'
 import cl from '../styles/headerFooter.module.css'
 
 const Header: FC = () => {
-  const dropdownMenuOptions: DropdownMenuOption[] = [
-    {
-      label: 'Создать контест',
-      onClick: () => {
-        navigate('/admin/contest')
-      },
-    },
-    {
-      label: 'Создать задачу',
-      onClick: () => {
-        navigate('/admin/task')
-      },
-    },
-  ]
-
   const navigate = useNavigate()
+  const dropdownMenuOptions: DropdownMenuOption[] = useMemo(
+    () => [
+      {
+        label: 'Создать контест',
+        onClick: () => {
+          navigate('/admin/contest')
+        },
+      },
+      {
+        label: 'Создать задачу',
+        onClick: () => {
+          navigate('/admin/task')
+        },
+      },
+    ],
+    [navigate],
+  )
+
   const [isShowModal, setShowModal] = useState(false)
   const [logoutMutation] = useLogoutMutation()
   const isAuth = useAppSelector((state) => state.authSlice.isAuth)

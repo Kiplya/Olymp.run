@@ -1,9 +1,11 @@
 import { FC, FormEvent, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import { useLoginMutation } from '../api/userApi'
 import CommonButton from '../components/CommonButton'
 import CommonInput from '../components/CommonInput'
 import cl from '../styles/authorization.module.css'
+import { isFetchBaseQueryError } from '../utils/assertions'
 import { getStatusMessage } from '../utils/common'
 
 const Authorization: FC = () => {
@@ -12,13 +14,16 @@ const Authorization: FC = () => {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
+    if (!isError) return
+
     setLogin('')
     setPassword('')
-  }, [isError])
+    toast.error(getStatusMessage(isFetchBaseQueryError(error) ? error.status : 0))
+  }, [isError, error])
 
   const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
     loginMutation({ login, password })
+    e.preventDefault()
   }
 
   return (
@@ -40,8 +45,6 @@ const Authorization: FC = () => {
         />
         <CommonButton label='Вход' type='submit' disabled={!login || !password} />
       </form>
-
-      <p style={{ opacity: error ? '1' : '0' }}>{getStatusMessage(isError && 'status' in error ? error.status : 0)}</p>
     </div>
   )
 }

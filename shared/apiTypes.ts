@@ -15,7 +15,7 @@ export type LoginRequest = {
 export type RegistrationRequest = LoginRequest;
 export type RegistrationResponse = LoginRequest;
 
-export type DeleteRequest = {
+export type UserDeleteByLoginRequest = {
   login: string;
 };
 
@@ -24,3 +24,70 @@ export type BaseResponse = {
 };
 
 export type EmptyResponse = {};
+
+export const TaskDifficulties = {
+  EASY: "easy",
+  MEDIUM: "medium",
+  HARD: "hard",
+} as const;
+
+export type TypeTaskDifficulty =
+  (typeof TaskDifficulties)[keyof typeof TaskDifficulties];
+
+export type TaskCreationRequest = {
+  taskName: string;
+  taskDescription: string;
+  taskMemoryLimit: string;
+  taskTimeLimit: string;
+  taskInputExample: string;
+  taskOutputExample: string;
+  taskDifficulty: TypeTaskDifficulty;
+};
+
+export type TaskDeletionRequest = {
+  title: string;
+};
+
+export type TaskTest = {
+  input: string;
+  expectedOutput: string;
+};
+
+export type TaskGetResponse = {
+  id: string;
+  title: string;
+  difficulty: TypeTaskDifficulty;
+};
+
+export type TaskGetRequest = {
+  title: string;
+  difficulty?: TypeTaskDifficulty;
+  limit: number;
+};
+
+export type ContestCreationRequest = {
+  title: string;
+  startTime: Date;
+  endTime: Date;
+  participantsCount: number;
+  tasksId: string[];
+};
+
+export type ContestCreationResponse = LoginRequest[];
+
+export type ContestDeletionRequest = TaskDeletionRequest;
+
+export type ContestGetByParticipantResponse = {
+  id: string;
+  title: string;
+  startTime: Date;
+  endTime: Date;
+}[];
+
+export type AddParticipantInContestRequest = {
+  userLogin: string;
+  contestTitle: string;
+};
+
+export type RemoveParticipantFromContestRequest =
+  AddParticipantInContestRequest;

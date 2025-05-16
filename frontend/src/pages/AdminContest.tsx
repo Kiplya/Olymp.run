@@ -1,19 +1,50 @@
-import { FC, useState, FormEvent } from 'react'
+import { TaskGetRequest, TaskGetResponse } from '@shared/apiTypes'
+import { FC, useState, FormEvent, useEffect } from 'react'
 import { useBeforeUnload } from 'react-router'
+import { toast } from 'react-toastify'
 
+import { useContestCreateMutation } from '../api/contestApi'
+import { useTaskGetByTitleQuery } from '../api/taskApi'
 import CommonButton from '../components/CommonButton'
 import CommonInput from '../components/CommonInput'
+import CommonSearch from '../components/CommonSearch'
 import usePrompt from '../hooks/usePrompt'
 import cl from '../styles/adminContest.module.css'
+import { isErrorMessage } from '../utils/assertions'
+import { downloadJsonFile } from '../utils/common'
 
 const AdminContest: FC = () => {
-  const [contestName, setContestName] = useState('')
+  const [title, setTitle] = useState('')
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
   const [participantsCount, setParticipantsCount] = useState('')
+  const [tasks, setTasks] = useState<TaskGetResponse[] | null>(null)
+
+  const [hasDownloaded, setHasDownloaded] = useState(false)
+  const [contestCreateMutation, { isSuccess, isError, error, data }] = useContestCreateMutation()
+
+  useEffect(() => {
+    if (!isError) return
+    toast.error(isErrorMessage(error) ? error.data.message : 'Unknown error')
+  }, [isError, error])
+
+  useEffect(() => {
+    if (!isSuccess || hasDownloaded) return
+
+    setHasDownloaded(true)
+    toast.success(`Контест успешно создан`)
+    downloadJsonFile(`${title} users.json`, data)
+
+    setIsFormDirty(false)
+    setTitle('')
+    setStartTime('')
+    setEndTime('')
+    setParticipantsCount('')
+    setTasks(null)
+  }, [isSuccess, hasDownloaded, data, title])
 
   const [isFormDirty, setIsFormDirty] = useState(false)
-  const isDisabled = contestName && startTime && endTime && participantsCount ? false : true
+  const isDisabled = title && startTime && endTime && participantsCount && tasks && tasks.length !== 0 ? false : true
 
   usePrompt(isFormDirty)
   useBeforeUnload((e) => {
@@ -23,6 +54,18 @@ const AdminContest: FC = () => {
   })
 
   const handleSubmit = (e: FormEvent) => {
+    if (!tasks) return
+
+    const reqData = {
+      title,
+      startTime: new Date(startTime),
+      endTime: new Date(endTime),
+      participantsCount: Number(participantsCount),
+      tasksId: tasks.map((task) => task.id),
+    }
+
+    contestCreateMutation(reqData)
+    setHasDownloaded(false)
     e.preventDefault()
   }
 
@@ -33,9 +76,9 @@ const AdminContest: FC = () => {
         <CommonInput
           placeholder='Название'
           type='text'
-          value={contestName}
+          value={title}
           onChange={(e) => {
-            setContestName(e.currentTarget.value.trim())
+            setTitle(e.currentTarget.value)
           }}
         />
 
@@ -70,6 +113,40 @@ const AdminContest: FC = () => {
           />
         </div>
 
+        <p>Задачи:</p>
+        <div className={cl.tasksDiv}>
+          {tasks?.map((task, index) => (
+            <div key={index}>
+              <p>
+                {index + 1}
+                {')'}
+              </p>
+
+              <p>{task.title}</p>
+
+              <p className={cl.removeBtn} onClick={() => setTasks(tasks.filter((curTask) => curTask.id !== task.id))}>
+                &times;
+              </p>
+            </div>
+          ))}
+          {
+            <div className={cl.searchTaskDiv}>
+              <p>
+                {tasks?.length ? tasks.length + 1 : 1}
+                {')'}
+              </p>
+              <CommonSearch<TaskGetResponse, TaskGetRequest>
+                isEqual={(a, b) => a.id === b.id}
+                useSearch={useTaskGetByTitleQuery}
+                placeholder='Введите название'
+                result={tasks}
+                setResult={setTasks}
+                limit={10}
+                renderItem={(task) => <p>{task.title}</p>}
+              />
+            </div>
+          }
+        </div>
         <CommonButton label='Создать' type='submit' disabled={isDisabled} />
       </form>
     </div>

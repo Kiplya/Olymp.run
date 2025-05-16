@@ -10,9 +10,10 @@
   background-color: #212121;
 }
 
-.loaderDiv div {
-  width: 5rem;
-  height: 5rem;
+.loader {
+  max-width: 5rem;
+  width: 100%;
+  aspect-ratio: 1/1;
   border-radius: 50%;
   border-top: 0.15rem solid rgb(246, 246, 246);
   border-right: 0.15rem solid transparent;

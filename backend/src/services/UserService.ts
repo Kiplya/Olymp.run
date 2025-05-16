@@ -1,14 +1,12 @@
-import { PrismaClient, users } from "@prisma/client";
-import { DeleteRequest, LoginRequest } from "@shared/apiTypes";
+import { UserDeleteByLoginRequest, LoginRequest } from "@shared/apiTypes";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { encrypt, decrypt, hash } from "../utils/crypt";
-
-const prisma = new PrismaClient();
+import { prisma } from "../handlers";
 
 export default class UserService {
   static async login({ login, password }: LoginRequest) {
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: { login },
     });
 
@@ -24,8 +22,8 @@ export default class UserService {
     const rawToken = crypto.randomBytes(32).toString("hex");
     const encryptedToken = encrypt(rawToken);
 
-    await prisma.sessions.create({
-      data: { user_id: user.id, token: rawToken },
+    await prisma.session.create({
+      data: { userId: user.id, token: rawToken },
     });
 
     return encryptedToken;
@@ -34,7 +32,7 @@ export default class UserService {
   static async logout(sessionToken: string) {
     const rawToken = decrypt(sessionToken);
 
-    const session = await prisma.sessions.findUnique({
+    const session = await prisma.session.findUnique({
       where: { token: rawToken },
     });
 
@@ -42,7 +40,7 @@ export default class UserService {
       return;
     }
 
-    await prisma.sessions.delete({
+    await prisma.session.delete({
       where: { token: rawToken },
     });
   }
@@ -50,18 +48,18 @@ export default class UserService {
   static async register({ login, password }: LoginRequest) {
     const hashedPassword = await hash(password);
 
-    await prisma.users.create({
+    await prisma.user.create({
       data: { login, password: hashedPassword },
     });
   }
 
-  static async delete({ login }: DeleteRequest) {
-    const user = await prisma.users.findUnique({ where: { login } });
+  static async deleteByLogin({ login }: UserDeleteByLoginRequest) {
+    const user = await prisma.user.findUnique({ where: { login } });
     if (!user) {
       return false;
     }
 
-    await prisma.users.delete({
+    await prisma.user.delete({
       where: { login },
     });
     return true;

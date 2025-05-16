@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import UserService from "../services/UserService";
 import { Constants } from "../Constants";
-import { users } from "@prisma/client";
+import { user } from "@prisma/client";
 import {
   LoginRequest,
   BaseResponse,
@@ -9,7 +9,7 @@ import {
   EmptyResponse,
   RegistrationRequest,
   RegistrationResponse,
-  DeleteRequest,
+  UserDeleteByLoginRequest,
 } from "@shared/apiTypes";
 import { userDataValidation, authorize } from "../utils/user";
 import { resServerError } from "../utils/common";
@@ -85,8 +85,8 @@ export default class UserController {
     }
   }
 
-  static async delete(
-    req: Request<{}, {}, DeleteRequest>,
+  static async deleteByLogin(
+    req: Request<{}, {}, UserDeleteByLoginRequest>,
     res: Response<BaseResponse>
   ) {
     try {
@@ -97,7 +97,7 @@ export default class UserController {
         return;
       }
 
-      const isDeleted = await UserService.delete(req.body);
+      const isDeleted = await UserService.deleteByLogin(req.body);
       if (!isDeleted) {
         res
           .status(ResponseStatus.INVALID_CREDENTIALS)
@@ -114,7 +114,7 @@ export default class UserController {
   }
 
   static async authMiddleware(
-    req: Request & { user?: users },
+    req: Request & { user?: user },
     res: Response<BaseResponse>,
     next: NextFunction
   ) {
@@ -146,7 +146,7 @@ export default class UserController {
   }
 
   static async adminMiddleware(
-    req: Request & { user?: users },
+    req: Request & { user?: user },
     res: Response<BaseResponse>,
     next: NextFunction
   ) {

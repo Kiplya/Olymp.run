@@ -1,40 +1,26 @@
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import dotenv from "dotenv";
 
-const ALGORITHM = "aes-256-gcm";
-const ENCRYPTION_KEY = crypto.randomBytes(32);
-const IV_LENGTH = 12;
+const ALGORITHM = "aes-256-cbc";
 const SALT_ROUNDS = 10;
 
+dotenv.config();
+const IV = Buffer.from(process.env.CRYPT_IV!, "hex");
+const KEY = Buffer.from(process.env.CRYPT_KEY!, "hex");
+
 export const encrypt = (data: string) => {
-  const iv = crypto.randomBytes(IV_LENGTH);
-  const cipher = crypto.createCipheriv(ALGORITHM, ENCRYPTION_KEY, iv);
-
-  const encrypted = Buffer.concat([
-    cipher.update(data, "utf8"),
-    cipher.final(),
-  ]);
-
-  const authTag = cipher.getAuthTag();
-
-  return Buffer.concat([iv, authTag, encrypted]).toString("base64");
+  const cipher = crypto.createCipheriv(ALGORITHM, KEY, IV);
+  let encrypted = cipher.update(data, "utf8", "hex");
+  encrypted += cipher.final("hex");
+  return encrypted;
 };
 
 export const decrypt = (encryptedData: string) => {
-  const bufferData = Buffer.from(encryptedData, "base64");
-  const iv = bufferData.subarray(0, IV_LENGTH);
-  const authTag = bufferData.subarray(IV_LENGTH, IV_LENGTH + 16);
-  const encrypted = bufferData.subarray(IV_LENGTH + 16);
-
-  const decipher = crypto.createDecipheriv(ALGORITHM, ENCRYPTION_KEY, iv);
-  decipher.setAuthTag(authTag);
-
-  const decrypted = Buffer.concat([
-    decipher.update(encrypted),
-    decipher.final(),
-  ]);
-
-  return decrypted.toString("utf8");
+  const decipher = crypto.createDecipheriv(ALGORITHM, KEY, IV);
+  let decrypted = decipher.update(encryptedData, "hex", "utf8");
+  decrypted += decipher.final("utf8");
+  return decrypted;
 };
 
 export const hash = async (data: string) => {

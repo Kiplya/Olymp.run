@@ -1,7 +1,4 @@
-import {
-  BaseResponse,
-  ResponseStatus,
-} from "@shared/apiTypes";
+import { BaseResponse, ResponseStatus } from "@shared/apiTypes";
 import { Response } from "express";
 
 export const resServerError = (res: Response<BaseResponse>, err: any) => {

@@ -7,6 +7,10 @@
   height: 100%;
 }
 
+.dropdownDiv > p {
+  width: fit-content;
+}
+
 .dropdownDiv ul {
   position: absolute;
   top: 100%;

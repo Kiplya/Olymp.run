@@ -7,83 +7,108 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model sessions {
+model session {
   id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
   token      String    @db.Text @unique
-  user_id    String    @db.Uuid
-  created_at DateTime  @default(now()) @db.Timestamptz(0)
+  createdAt DateTime   @default(now()) @db.Timestamptz(0)
+  
+  userId    String     @db.Uuid
 
-  user      users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user       user     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model users {
+model user {
   id       String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
   login    String      @db.Text @unique
   password String      @db.Text
-  isAdmin Boolean      @default(false)
+  isAdmin  Boolean     @default(false)
 
-  sessions sessions[]
-  competitions competition_participant[]
+  sessions session[]
+  contests contestParticipant[]
 }
 
-model competition {
+model contest {
   id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  title         String      @db.Text
+  title         String      @db.Text @unique
   startTime     DateTime    @db.Timestamptz(0)
   endTime       DateTime    @db.Timestamptz(0)
 
-  tasks         competitionTask[]
-  participants  competition_participant[]
+  tasks         contestTask[]
+  participants  contestParticipant[]
 }
 
-model competition_participant {
+model contestParticipant {
   score          Int          @default(0)
+  tasks          contestParticipantTask[]
 
   userId         String       @db.Uuid
-  competitionId  String       @db.Uuid
+  contestId      String       @db.Uuid
 
-  user           users        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  competition    competition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  user           user        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contest        contest      @relation(fields: [contestId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, competitionId])
-  @@id([userId, competitionId])
+  @@id([userId, contestId])
 }
 
-model competitionTask {
-  order         Int 
+model contestParticipantTask {
+  score       Int
 
-  competitionId String       @db.Uuid
-  taskId        String       @db.Uuid
+  userId      String              @db.Uuid
+  contestId   String              @db.Uuid
+  taskId      String              @db.Uuid
 
-  competition   competition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
-  task          task         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  task        contestTask         @relation(fields: [contestId, taskId], references: [contestId, taskId], onDelete: Cascade)
+  participant contestParticipant  @relation(fields: [userId, contestId], references: [userId, contestId], onDelete: Cascade)
 
-  @@unique([competitionId, taskId])
-  @@id([competitionId, taskId])
+  @@id([userId, contestId, taskId])
+}
+
+model contestTask {
+  order            Int
+  participantTasks contestParticipantTask[] 
+
+  contestId        String       @db.Uuid
+  taskId           String       @db.Uuid
+
+  contest          contest      @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  task             task         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@id([contestId, taskId])
 }
 
 model task {
   id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  title          String       @db.Text
+  title          String       @db.Text @unique
   description    String       @db.Text
 
   exampleInput   String       @db.Text
   exampleOutput  String       @db.Text
 
-  competitions   competitionTask[]
+  timeLimit      Int
+  memoryLimit    Int
+  difficulty     difficulty
+
+  contests       contestTask[]
   tests          taskTest[]
 }
 
 model taskTest {
   id                String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
+  order             Int
   input             String       @db.Text
   expectedOutput    String       @db.Text
 
   taskId            String       @db.Uuid
   task              task         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+enum difficulty {
+  easy
+  medium
+  hard
 }

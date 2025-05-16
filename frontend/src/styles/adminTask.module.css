@@ -24,3 +24,24 @@
   width: 100%;
   height: 20dvh;
 }
+
+.adminDiv .dropdown {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+}
+
+.adminDiv .dropdown ul {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.adminDiv .dropdown ul li {
+  background-color: rgb(50, 50, 50);
+}
+
+.adminDiv > p {
+  text-align: center;
+  width: 50%;
+  font-size: var(--font-small);
+}
