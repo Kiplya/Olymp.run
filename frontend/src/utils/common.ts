@@ -27,3 +27,23 @@ export const downloadJsonFile = (filename: string, data: any) => {
 
   URL.revokeObjectURL(url)
 }
+
+export const getTimeDiffString = (date: string | Date) => {
+  const diff = new Date(date).getTime() - new Date().getTime()
+
+  if (diff <= 0) {
+    return 0
+  }
+
+  const minutes = Math.floor(diff / (1000 * 60))
+  const hours = Math.floor(diff / (1000 * 60 * 60))
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+
+  if (minutes < 60) {
+    return `${minutes} минут`
+  } else if (hours < 24) {
+    return `${hours} часов`
+  } else {
+    return `${days} дней`
+  }
+}

@@ -1,9 +1,11 @@
 import { ReactElement } from 'react'
 
+import ContestLayout from '../components/ContestLayout'
 import AdminContest from '../pages/AdminContest'
 import AdminTask from '../pages/AdminTask'
 import Authorization from '../pages/Authorization'
 import Contests from '../pages/Contests'
+import ContestTask from '../pages/ContestTask'
 
 type AppRoute = {
   path: string
@@ -11,7 +13,10 @@ type AppRoute = {
   children?: AppRoute[]
 }
 
-export const privateRoutes: AppRoute[] = [{ path: '/contests', element: <Contests /> }]
+export const privateRoutes: AppRoute[] = [
+  { path: '/contests', element: <Contests /> },
+  { path: '/contest/:contestId', element: <ContestLayout /> },
+]
 
 export const publicRoutes: AppRoute[] = [{ path: '/login', element: <Authorization /> }]
 

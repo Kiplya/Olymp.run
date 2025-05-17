@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import ContestService from "../services/ContestService";
 import { resServerError } from "../utils/common";
 import { user } from "@prisma/client";
@@ -8,8 +8,8 @@ import {
   ContestCreationRequest,
   ContestCreationResponse,
   ContestDeletionRequest,
-  ContestGetByParticipantResponse,
-  EmptyResponse,
+  ContestGetInfoResponse,
+  ContestGetManyByParticipantResponse,
   RemoveParticipantFromContestRequest,
   ResponseStatus,
 } from "@shared/apiTypes";
@@ -43,7 +43,7 @@ export default class ContestController {
       }
 
       const users = await ContestService.create(req.body);
-      const usersJson = JSON.stringify(users, null, 2)
+      const usersJson = JSON.stringify(users, null, 2);
       res.status(ResponseStatus.SUCCESS).json(usersJson);
     } catch (err) {
       resServerError(res, err);
@@ -52,7 +52,7 @@ export default class ContestController {
 
   static async deleteByTitle(
     req: Request<{}, {}, ContestDeletionRequest>,
-    res: Response<BaseResponse | EmptyResponse>
+    res: Response<BaseResponse>
   ) {
     try {
       const isDeleted = await ContestService.deleteByTitle(req.body.title);
@@ -70,14 +70,14 @@ export default class ContestController {
     }
   }
 
-  static async getByParticipant(
+  static async getManyByParticipant(
     req: Request & { user?: user },
-    res: Response<
-      ContestGetByParticipantResponse | BaseResponse | EmptyResponse
-    >
+    res: Response<ContestGetManyByParticipantResponse | BaseResponse>
   ) {
     try {
-      const contests = await ContestService.getByParticipant(req?.user?.id!);
+      const contests = await ContestService.getManyByParticipant(
+        req?.user?.id!
+      );
       if (!contests) {
         res.sendStatus(ResponseStatus.NO_CONTENT);
         return;
@@ -91,7 +91,7 @@ export default class ContestController {
 
   static async addParticipant(
     req: Request<{}, {}, AddParticipantInContestRequest>,
-    res: Response<BaseResponse | EmptyResponse>
+    res: Response<BaseResponse>
   ) {
     try {
       const isAdded = await ContestService.addParticipant(req.body);
@@ -110,7 +110,7 @@ export default class ContestController {
 
   static async removeParticipant(
     req: Request<{}, {}, RemoveParticipantFromContestRequest>,
-    res: Response<BaseResponse | EmptyResponse>
+    res: Response<BaseResponse>
   ) {
     try {
       const isRemoved = await ContestService.removeParticipant(req.body);
@@ -122,6 +122,60 @@ export default class ContestController {
       }
 
       res.sendStatus(ResponseStatus.NO_CONTENT);
+    } catch (err) {
+      resServerError(res, err);
+    }
+  }
+
+  static async getInfo(
+    req: Request & { query: { contestId?: string }; user?: user },
+    res: Response<ContestGetInfoResponse | BaseResponse>
+  ) {
+    try {
+      const userId = req?.user?.id!;
+      const contestId = req.query?.contestId!;
+
+      const contestInfo = await ContestService.getInfo(contestId, userId);
+      if (!contestInfo) {
+        res.sendStatus(ResponseStatus.NO_CONTENT);
+        return;
+      }
+
+      res.status(ResponseStatus.SUCCESS).json(contestInfo);
+    } catch (err) {
+      resServerError(res, err);
+    }
+  }
+
+  static async participationMiddleware(
+    req: Request & { user?: user },
+    res: Response<BaseResponse>,
+    next: NextFunction
+  ) {
+    try {
+      const userId = req?.user?.id!;
+      const contestId = req.query?.contestId;
+
+      if (!contestId) {
+        res
+          .status(ResponseStatus.INVALID_CREDENTIALS)
+          .json({ message: "Contest not specified" });
+        return;
+      }
+
+      const participant = await ContestService.getOneByParticipant(
+        userId,
+        contestId.toString()
+      );
+
+      if (!participant) {
+        res
+          .status(ResponseStatus.FORBIDDEN)
+          .json({ message: "You are not participating in this contest" });
+        return;
+      }
+
+      next();
     } catch (err) {
       resServerError(res, err);
     }

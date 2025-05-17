@@ -1,5 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { ContestCreationRequest, ContestCreationResponse, ContestGetByParticipantResponse } from '@shared/apiTypes'
+import {
+  ContestCreationRequest,
+  ContestCreationResponse,
+  ContestGetInfoRequest,
+  ContestGetInfoResponse,
+  ContestGetManyByParticipantResponse,
+} from '@shared/apiTypes'
 
 export const contestApi = createApi({
   reducerPath: 'contestApi',
@@ -17,12 +23,21 @@ export const contestApi = createApi({
       }),
     }),
 
-    contestGetByParticipant: builder.query<ContestGetByParticipantResponse, void>({
+    contestGetManyByParticipant: builder.query<ContestGetManyByParticipantResponse, void>({
       query: () => ({
-        url: '/auth/contestGetByParticipant',
+        url: '/auth/contestGetManyByParticipant',
+      }),
+    }),
+
+    contestGetInfo: builder.query<ContestGetInfoResponse, ContestGetInfoRequest>({
+      query: ({ contestId }) => ({
+        url: '/contest/getInfo',
+        params: {
+          contestId,
+        },
       }),
     }),
   }),
 })
 
-export const { useContestCreateMutation, useContestGetByParticipantQuery } = contestApi
+export const { useContestCreateMutation, useContestGetManyByParticipantQuery, useContestGetInfoQuery } = contestApi

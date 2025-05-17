@@ -23,8 +23,6 @@ export type BaseResponse = {
   message: string;
 };
 
-export type EmptyResponse = {};
-
 export const TaskDifficulties = {
   EASY: "easy",
   MEDIUM: "medium",
@@ -77,11 +75,11 @@ export type ContestCreationResponse = string;
 
 export type ContestDeletionRequest = TaskDeletionRequest;
 
-export type ContestGetByParticipantResponse = {
+export type ContestGetManyByParticipantResponse = {
   id: string;
   title: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: string | Date;
+  endTime: string | Date;
 }[];
 
 export type AddParticipantInContestRequest = {
@@ -91,3 +89,29 @@ export type AddParticipantInContestRequest = {
 
 export type RemoveParticipantFromContestRequest =
   AddParticipantInContestRequest;
+
+export type ContestGetInfoResponse = {
+  title: string;
+  endTime: string | Date;
+
+  participants: { score: number }[];
+
+  tasks: {
+    order: number;
+    participantTasks: { score: number }[];
+    task: {
+      id: string;
+      title: string;
+      description: string;
+      exampleInput: string;
+      exampleOutput: string;
+      timeLimit: number;
+      memoryLimit: number;
+      difficulty: (typeof TaskDifficulties)[keyof typeof TaskDifficulties];
+    };
+  }[];
+};
+
+export type ContestGetInfoRequest = {
+  contestId: string;
+};

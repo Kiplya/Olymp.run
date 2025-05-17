@@ -6,7 +6,6 @@ import {
   LoginRequest,
   BaseResponse,
   ResponseStatus,
-  EmptyResponse,
   RegistrationRequest,
   RegistrationResponse,
   UserDeleteByLoginRequest,
@@ -45,7 +44,7 @@ export default class UserController {
     }
   }
 
-  static async logout(req: Request, res: Response<EmptyResponse>) {
+  static async logout(req: Request, res: Response) {
     try {
       const sessionToken = req.cookies?.[Constants.SESSION_COOKIE_NAME];
       if (sessionToken) {

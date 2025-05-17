@@ -1,0 +1,48 @@
+.contestsDiv {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.contestsList {
+  width: 40dvw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contestItem {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(31, 31, 31);
+  padding: 1rem;
+  gap: 1rem;
+  border: 0.1rem solid rgb(100, 100, 100);
+  border-radius: 1rem;
+}
+
+.contestItem > p {
+  text-align: center;
+}
+
+.contestDescription {
+  width: 100%;
+  padding-inline: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (orientation: portrait) {
+  .contestsList {
+    width: 75dvw;
+  }
+
+  .contestDescription {
+    padding-inline: 0;
+  }
+}

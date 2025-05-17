@@ -1,6 +1,5 @@
 import {
   BaseResponse,
-  EmptyResponse,
   ResponseStatus,
   TaskCreationRequest,
   TaskDeletionRequest,
@@ -14,7 +13,7 @@ import TaskService from "../services/TaskService";
 export default class TaskController {
   static async create(
     req: Request<{}, {}, TaskCreationRequest>,
-    res: Response<BaseResponse | EmptyResponse>
+    res: Response<BaseResponse>
   ) {
     try {
       const testsFile = req.file;
@@ -34,7 +33,7 @@ export default class TaskController {
 
   static async deleteByTitle(
     req: Request<{}, {}, TaskDeletionRequest>,
-    res: Response<BaseResponse | EmptyResponse>
+    res: Response<BaseResponse>
   ) {
     try {
       const isDeleted = await TaskService.deleteByTitle(req.body.title);

@@ -67,7 +67,7 @@ export default class ContestService {
     return true;
   }
 
-  static async getByParticipant(userId: string) {
+  static async getManyByParticipant(userId: string) {
     const contests = await prisma.contest.findMany({
       where: {
         participants: {
@@ -79,6 +79,60 @@ export default class ContestService {
     });
 
     return contests;
+  }
+
+  static async getOneByParticipant(userId: string, contestId: string) {
+    const participant = await prisma.contestParticipant.findUnique({
+      where: {
+        userId_contestId: {
+          userId,
+          contestId,
+        },
+      },
+    });
+
+    return participant;
+  }
+
+  static async getInfo(contestId: string, userId: string) {
+    const contestInfo = await prisma.contest.findUnique({
+      where: {
+        id: contestId,
+      },
+      select: {
+        title: true,
+        endTime: true,
+        participants: {
+          where: { userId, contestId },
+          select: { score: true },
+        },
+        tasks: {
+          select: {
+            order: true,
+            task: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                difficulty: true,
+                exampleInput: true,
+                exampleOutput: true,
+                timeLimit: true,
+                memoryLimit: true,
+              },
+            },
+            participantTasks: {
+              where: { userId, contestId },
+              select: {
+                score: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return contestInfo;
   }
 
   static async addParticipant({
