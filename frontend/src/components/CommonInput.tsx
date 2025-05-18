@@ -24,7 +24,7 @@ const CommonInput: FC<CommonInputProps> = ({
   disabled,
 }) => (
   <input
-    className={className ? className : cl.textInput}
+    className={`${cl.textInput} ${className ?? ''}`}
     type={type}
     value={value}
     onChange={onChange}

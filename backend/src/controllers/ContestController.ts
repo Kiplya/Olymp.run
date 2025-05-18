@@ -175,6 +175,22 @@ export default class ContestController {
         return;
       }
 
+      const contestTimes = await ContestService.getByContestId(
+        contestId.toString()
+      );
+
+      if (!contestTimes) {
+        throw new Error(`Times in contest with id ${contestId} not specified`);
+      }
+
+      const { startTime, endTime } = contestTimes;
+      if (new Date() < startTime || new Date() > endTime) {
+        res.status(ResponseStatus.FORBIDDEN).json({
+          message: "Access to this contest isn't allowed at the current time",
+        });
+        return;
+      }
+
       next();
     } catch (err) {
       resServerError(res, err);

@@ -28,6 +28,15 @@ export const downloadJsonFile = (filename: string, data: any) => {
   URL.revokeObjectURL(url)
 }
 
+const plural = (time: number, forms: [string, string, string]) => {
+  const mod10 = time % 10
+  const mod100 = time % 100
+
+  if (mod10 === 1 && mod100 !== 11) return forms[0]
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return forms[1]
+  return forms[2]
+}
+
 export const getTimeDiffString = (date: string | Date) => {
   const diff = new Date(date).getTime() - new Date().getTime()
 
@@ -35,15 +44,18 @@ export const getTimeDiffString = (date: string | Date) => {
     return 0
   }
 
+  const seconds = Math.floor(diff / 1000)
   const minutes = Math.floor(diff / (1000 * 60))
   const hours = Math.floor(diff / (1000 * 60 * 60))
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
 
-  if (minutes < 60) {
-    return `${minutes} минут`
+  if (seconds < 60) {
+    return `${seconds} ${plural(seconds, ['секунда', 'секунды', 'секунд'])}`
+  } else if (minutes < 60) {
+    return `${minutes} ${plural(minutes, ['минута', 'минуты', 'минут'])}`
   } else if (hours < 24) {
-    return `${hours} часов`
+    return `${hours} ${plural(hours, ['час', 'часа', 'часов'])}`
   } else {
-    return `${days} дней`
+    return `${days} ${plural(days, ['день', 'дня', 'дней'])}`
   }
 }

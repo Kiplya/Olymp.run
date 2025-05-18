@@ -15,7 +15,11 @@ type AppRoute = {
 
 export const privateRoutes: AppRoute[] = [
   { path: '/contests', element: <Contests /> },
-  { path: '/contest/:contestId', element: <ContestLayout /> },
+  {
+    path: '/contest/:contestId',
+    element: <ContestLayout />,
+    children: [{ path: ':taskId', element: <ContestTask /> }],
+  },
 ]
 
 export const publicRoutes: AppRoute[] = [{ path: '/login', element: <Authorization /> }]

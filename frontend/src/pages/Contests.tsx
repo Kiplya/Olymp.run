@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 
@@ -12,6 +12,16 @@ import { getTimeDiffString } from '../utils/common'
 const Contests: FC = () => {
   const { data, isError, isFetching } = useContestGetManyByParticipantQuery()
   const navigate = useNavigate()
+
+  const [now, setNow] = useState(Date.now())
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(Date.now())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     if (!isError) return
@@ -27,8 +37,8 @@ const Contests: FC = () => {
 
       {!isFetching && data && data.length > 0 && (
         <div className={cl.contestsList}>
-          {data.map((contest) => (
-            <div className={cl.contestItem}>
+          {data.map((contest, index) => (
+            <div key={index} className={cl.contestItem}>
               <p>
                 <strong>{contest.title}</strong>
               </p>

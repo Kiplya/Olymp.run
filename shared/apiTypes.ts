@@ -115,3 +115,5 @@ export type ContestGetInfoResponse = {
 export type ContestGetInfoRequest = {
   contestId: string;
 };
+
+export const MAX_SCORE_FOR_TASK = 100;

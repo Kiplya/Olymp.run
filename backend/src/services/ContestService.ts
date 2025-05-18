@@ -179,4 +179,11 @@ export default class ContestService {
 
     return true;
   }
+
+  static async getByContestId(contestId: string) {
+    return await prisma.contest.findUnique({
+      where: { id: contestId },
+      select: { startTime: true, endTime: true },
+    });
+  }
 }

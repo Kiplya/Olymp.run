@@ -2,10 +2,59 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .loaderDiv {
   display: flex;
   justify-content: center;
+}
+
+.contestLayoutDiv > .contestInfoDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.contestLayoutDiv > h1,
+.contestLayoutDiv > .contestInfoDiv > p {
+  text-align: center;
+}
+
+.contestDiv {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.contestLayoutDiv > .taskButtonsDiv {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.taskButtonsDiv > button {
+  background-color: transparent;
+  border: 0.05rem solid rgb(100, 100, 100);
+  border-radius: 50%;
+  width: 2.5rem;
+  aspect-ratio: 1/1;
+}
+
+.taskButtonsDiv > button.completed {
+  border-color: transparent;
+  background-color: rgb(0, 110, 51);
+}
+
+.taskButtonsDiv > button.proccess {
+  border-color: transparent;
+  background-color: rgb(123, 0, 28);
+}
+
+.taskButtonsDiv > button.selected {
+  transform: scale(1.1);
 }

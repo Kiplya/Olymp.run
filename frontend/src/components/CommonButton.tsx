@@ -11,7 +11,7 @@ interface CommonButtonProps {
 }
 
 const CommonButton: FC<CommonButtonProps> = ({ className, label, type, onClick, disabled }) => (
-  <button className={className ? className : cl.button} type={type} onClick={onClick} disabled={disabled}>
+  <button className={`${cl.button} ${className ?? ''}`} type={type} onClick={onClick} disabled={disabled}>
     {label}
   </button>
 )
