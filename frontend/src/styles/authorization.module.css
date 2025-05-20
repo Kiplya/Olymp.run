@@ -17,14 +17,5 @@
 }
 
 .authDiv form button {
-  background-color: transparent;
-  border: 0.05rem solid rgb(130, 130, 130);
   border-radius: 0.5rem;
-}
-
-@media (hover: hover) {
-  .authBtn:hover {
-    transition: transform 0.2s ease;
-    transform: scale(1.1);
-  }
 }

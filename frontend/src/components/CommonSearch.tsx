@@ -78,7 +78,7 @@ const CommonSearch = <T, S>({
                 onClick={() => {
                   setQuery('')
                   setDebouncedQuery('')
-                  result ? setResult([...result, item]) : setResult([item])
+                  result ? setResult((prev) => [...prev!, item]) : setResult([item])
                 }}
               >
                 {renderItem(item)}

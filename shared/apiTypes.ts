@@ -107,7 +107,7 @@ export type ContestGetInfoResponse = {
       exampleOutput: string;
       timeLimit: number;
       memoryLimit: number;
-      difficulty: (typeof TaskDifficulties)[keyof typeof TaskDifficulties];
+      difficulty: TypeTaskDifficulty;
     };
   }[];
 };
@@ -117,3 +117,13 @@ export type ContestGetInfoRequest = {
 };
 
 export const MAX_SCORE_FOR_TASK = 100;
+
+export const AllowedCompilers = {
+  CPP: "C++",
+  Java: "Java",
+  PYTHON: "Python",
+  JS: "JS",
+} as const;
+
+export type TypeAllowedCompilers =
+  (typeof AllowedCompilers)[keyof typeof AllowedCompilers];

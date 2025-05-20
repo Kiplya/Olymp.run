@@ -4,6 +4,7 @@ import { Outlet, useLocation, Navigate } from 'react-router'
 import Footer from './Footer'
 import Header from './Header'
 import PageLayout from './PageLayout'
+import ScrollToTopButton from './ScrollToTopButton'
 
 import useAppSelector from '../hooks/useAppSelector'
 
@@ -26,6 +27,7 @@ const RouterLayout: FC = () => {
         <Outlet />
       </PageLayout>
       <Footer />
+      <ScrollToTopButton />
     </>
   )
 }

@@ -141,7 +141,14 @@ export default class ContestService {
   }: AddParticipantInContestRequest) {
     const [user, contest] = await Promise.all([
       prisma.user.findUnique({ where: { login: userLogin } }),
-      prisma.contest.findUnique({ where: { title: contestTitle } }),
+      prisma.contest.findFirst({
+        where: {
+          title: {
+            equals: contestTitle,
+            mode: "insensitive",
+          },
+        },
+      }),
     ]);
 
     if (!user || !contest) {

@@ -96,3 +96,8 @@ input::-webkit-inner-spin-button {
 .Toastify__toast-container {
   margin-bottom: 3dvh;
 }
+
+::selection {
+  background-color: rgb(7, 58, 165);
+  color: rgb(246, 246, 246);
+}

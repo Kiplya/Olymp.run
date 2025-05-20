@@ -1,0 +1,6 @@
+.select {
+  background-color: rgb(246, 246, 246);
+  color: rgb(30, 30, 30);
+  font-family: 'Inter';
+  font-size: var(--font-small);
+}

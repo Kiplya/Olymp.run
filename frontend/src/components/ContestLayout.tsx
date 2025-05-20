@@ -1,5 +1,5 @@
 import { MAX_SCORE_FOR_TASK } from '@shared/apiTypes'
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { Outlet, useParams, Navigate, useNavigate } from 'react-router'
 
 import CommonButton from './CommonButton'
@@ -10,10 +10,36 @@ import cl from '../styles/contestLayout.module.css'
 import { getTimeDiffString } from '../utils/common'
 
 const ContestLayout: FC = () => {
+  const [solutions, setSolutions] = useState<Record<string, { solution: string; compiler: string }>>({})
   const { contestId, taskId } = useParams()
   const [timeLeft, setTimeLeft] = useState<string | 0>('')
   const { data, isError, isFetching } = useContestGetInfoQuery({ contestId: contestId! })
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const stored = localStorage.getItem(`contest-${contestId}-solutions`)
+    if (stored) {
+      try {
+        setSolutions(JSON.parse(stored))
+      } catch (e) {
+        console.warn('Error during parse localStorage')
+      }
+    }
+  }, [contestId])
+
+  useEffect(() => {
+    localStorage.setItem(`contest-${contestId}-solutions`, JSON.stringify(solutions))
+  }, [solutions, contestId])
+
+  const updateTaskState = useCallback((taskId: string, newData: { solution?: string; compiler?: string }) => {
+    setSolutions((prev) => ({
+      ...prev,
+      [taskId]: {
+        ...prev[taskId],
+        ...newData,
+      },
+    }))
+  }, [])
 
   useEffect(() => {
     if (!data?.endTime) return
@@ -83,7 +109,14 @@ const ContestLayout: FC = () => {
             </div>
           </div>
 
-          <Outlet context={data.tasks.find((t) => t.task.id === taskId)?.task} />
+          <Outlet
+            key={taskId}
+            context={{
+              task: data.tasks.find((t) => t.task.id === taskId)?.task!,
+              state: solutions[taskId!] ?? { solution: '', compiler: '' },
+              updateState: (newData: { solution?: string; compiler?: string }) => updateTaskState(taskId!, newData),
+            }}
+          />
         </div>
       )}
     </>

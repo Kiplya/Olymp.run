@@ -1,2 +1,49 @@
 .contestTaskDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.taskDiv {
+  margin-inline: 15dvw;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  border: 0.1rem solid rgb(100, 100, 100);
+  border-radius: 2rem;
+}
+
+.solutionTextAreaDiv {
+  width: 100%;
+  height: 50dvh;
+}
+
+.contestTaskDiv form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-inline: 15dvw;
+}
+
+.contestTaskDiv form button {
+  margin-top: 1rem;
+}
+
+.contestTaskDiv > h1 {
+  text-align: center;
+}
+
+@media (orientation: portrait) {
+  .taskDiv {
+    margin-inline: 0;
+  }
+
+  .contestTaskDiv form {
+    padding-inline: 0;
+  }
 }

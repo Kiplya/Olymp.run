@@ -6,6 +6,7 @@
   font-family: 'Inter';
   color: rgb(246, 246, 246);
   font-size: var(--font-small);
+  padding: 0.5rem;
   border: 0.05rem solid transparent;
   border-radius: 0.5rem;
   background-color: rgb(70, 70, 70);
