@@ -6,7 +6,7 @@ import { checkDbConnection } from "./src/utils/db";
 import cors from "cors";
 
 dotenv.config();
-const app = express();
+const app = express(); 
 
 if (process.env.MODE === "development") {
   app.use(

@@ -21,14 +21,14 @@
   border-radius: 1rem;
 }
 
-.modal div {
+.modal > div {
   display: flex;
   width: 100%;
   padding-inline: 2rem;
   justify-content: space-between;
 }
 
-.modal div button {
+.modal > div > button {
   background-color: rgb(31, 31, 31);
   flex: 1;
   max-width: 4rem;

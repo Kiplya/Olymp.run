@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:alpine
     container_name: olymprun_db
-    restart: always
+    restart: unless-stopped
 
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -16,6 +16,41 @@ services:
     networks:
       - olymprun
 
+  judge0_db:
+    image: postgres:alpine
+    container_name: olymprun_judge0_db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: olymprun_judge0_db
+    ports:
+      - "6000:5432"
+
+    volumes:
+      - judge0_db_data:/var/lib/postgresql/data
+    networks:
+      - olymprun
+
+  judge0:
+    image: judge0/judge0:latest
+    container_name: olymprun_judge0
+    restart: unless-stopped
+
+    ports:
+      - "5000:5000"
+    depends_on:
+      - judge0_db
+
+    environment:
+      - PORT=5000
+      - POSTGRES_HOST=judge0_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - olymprun
+
   backend:
     build: ./backend
     container_name: olymprun_backend
@@ -24,12 +59,14 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - judge0
 
     environment:
       MODE: production
       BACKEND_PORT: 8000
       CRYPT_KEY: ${CRYPT_KEY}
       CRYPT_IV: ${CRYPT_IV}
+      JUDGE0_API_URL: http://judge0:5000
 
       DB_HOST: db
       DB_PORT: 5432
@@ -81,6 +118,7 @@ services:
       - olymprun
 
 volumes:
+  judge0_db_data:
   db_data:
   frontend_build:
 

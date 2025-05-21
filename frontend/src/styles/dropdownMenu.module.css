@@ -2,7 +2,7 @@
   position: absolute;
 }
 
-.dropdownDiv img {
+.dropdownDiv > img {
   aspect-ratio: 1/1;
   height: 100%;
 }
@@ -11,25 +11,25 @@
   width: fit-content;
 }
 
-.dropdownDiv ul {
+.dropdownDiv > ul {
   position: absolute;
   top: 100%;
   left: 0;
 }
 
-.dropdownDiv li {
+.dropdownDiv > ul > li {
   cursor: pointer;
   background-color: rgb(70, 70, 70);
   padding: 0.5rem;
   border: 0.05rem solid transparent;
 }
 
-.dropdownDiv li p {
+.dropdownDiv > ul > li > p {
   white-space: nowrap;
 }
 
 @media (hover: hover) {
-  .dropdownDiv li:hover {
+  .dropdownDiv > ul > li:hover {
     border-color: rgb(130, 130, 130);
   }
 }

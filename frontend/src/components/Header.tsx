@@ -38,7 +38,9 @@ const Header: FC = () => {
 
   const confirmLogout = useCallback(() => {
     logoutMutation()
+    localStorage.clear()
     closeModal()
+    window.location.reload()
   }, [closeModal, logoutMutation])
 
   return (

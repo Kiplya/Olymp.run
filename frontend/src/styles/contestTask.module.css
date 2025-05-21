@@ -1,11 +1,16 @@
 .contestTaskDiv {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
 }
 
-.taskDiv {
+.taskDivWrapper {
+  width: 100%;
+}
+
+.taskDivWrapper > div {
   margin-inline: 15dvw;
   display: flex;
   flex-direction: column;
@@ -20,7 +25,7 @@
   height: 50dvh;
 }
 
-.contestTaskDiv form {
+.contestTaskDiv > form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,7 +35,7 @@
   padding-inline: 15dvw;
 }
 
-.contestTaskDiv form button {
+.contestTaskDiv > form > button {
   margin-top: 1rem;
 }
 
@@ -39,11 +44,11 @@
 }
 
 @media (orientation: portrait) {
-  .taskDiv {
+  .taskDivWrapper > div {
     margin-inline: 0;
   }
 
-  .contestTaskDiv form {
+  .contestTaskDiv > form {
     padding-inline: 0;
   }
 }

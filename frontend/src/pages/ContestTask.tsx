@@ -55,22 +55,23 @@ const ContestTask: FC = () => {
       <p>Сложность: {convertDifficulty(task.difficulty)}</p>
       <p>Ограничение по времени: {task.timeLimit / 1000} сек.</p>
       <p>Ограничение по памяти: {task.memoryLimit} МБ</p>
-
-      <div className={cl.taskDiv}>
-        <p>{parse(task.description.replace(/\n/g, '<br />'))}</p>
-
+      <div className={cl.taskDivWrapper}>
         <div>
-          <p>
-            <strong>Пример входных данных:</strong>
-          </p>
-          <p>{parse(task.exampleInput.replace(/\n/g, '<br />'))}</p>
-        </div>
+          <p>{parse(task.description.replace(/\n/g, '<br />'))}</p>
 
-        <div>
-          <p>
-            <strong>Пример выходных данных:</strong>
-          </p>
-          <p>{parse(task.exampleOutput.replace(/\n/g, '<br />'))}</p>
+          <div>
+            <p>
+              <strong>Пример входных данных:</strong>
+            </p>
+            <p>{parse(task.exampleInput.replace(/\n/g, '<br />'))}</p>
+          </div>
+
+          <div>
+            <p>
+              <strong>Пример выходных данных:</strong>
+            </p>
+            <p>{parse(task.exampleOutput.replace(/\n/g, '<br />'))}</p>
+          </div>
         </div>
       </div>
 

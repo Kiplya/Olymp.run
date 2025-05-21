@@ -13,6 +13,7 @@
     "@types/multer": "latest",
     "@types/node": "latest",
     "@types/pg": "latest",
+    "axios": "latest",
     "bcryptjs": "latest",
     "cookie-parser": "latest",
     "cors": "latest",

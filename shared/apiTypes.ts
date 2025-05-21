@@ -119,10 +119,13 @@ export type ContestGetInfoRequest = {
 export const MAX_SCORE_FOR_TASK = 100;
 
 export const AllowedCompilers = {
-  CPP: "C++",
-  Java: "Java",
-  PYTHON: "Python",
-  JS: "JS",
+  54: "C++ (GCC 9.2.0)",
+  50: "C (GCC 9.2.0)",
+  62: "Java (OpenJDK 13.0.1)",
+  63: "JavaScript (Node.js 12.14.0)",
+  78: "Kotlin (1.3.70)",
+  71: "Python (3.8.1)",
+  73: "Rust (1.40.0)",
 } as const;
 
 export type TypeAllowedCompilers =

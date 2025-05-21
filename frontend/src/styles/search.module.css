@@ -9,7 +9,7 @@
   width: 1.25rem;
 }
 
-.searchDiv ul li {
+.searchDiv > ul > li {
   text-align: center;
   padding: 0.25rem;
   padding-inline: 1rem;
@@ -23,7 +23,7 @@
 }
 
 @media (hover: hover) {
-  .searchDiv ul li:hover {
+  .searchDiv > ul > li:hover {
     border-color: rgb(100, 100, 100);
   }
 }

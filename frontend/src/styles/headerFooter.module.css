@@ -20,7 +20,7 @@
   cursor: pointer;
 }
 
-.footer p {
+.footer > p {
   font-size: var(--font-small);
   text-align: center;
 }
@@ -46,10 +46,12 @@
   .dropdown {
     height: 40%;
   }
-}
 
-@media (hover: none) {
-  .dropdown {
-    visibility: hidden;
+  .footer {
+    height: 2.5dvh;
+  }
+
+  .header {
+    height: 7.5dvh;
   }
 }

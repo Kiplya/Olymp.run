@@ -23,7 +23,7 @@ html {
   }
 }
 
-@media ((max-width: 768px)) {
+@media (max-width: 768px) {
   html {
     font-size: 0.75em;
   }
