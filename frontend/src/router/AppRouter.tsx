@@ -5,6 +5,7 @@ import { publicRoutes, privateRoutes, adminRoutes } from './routes'
 
 import RouterLayout from '../components/RouterLayout'
 import useAppSelector from '../hooks/useAppSelector'
+import ErrorPage from '../pages/ErrorPage'
 
 const AppRouter: FC = () => {
   let routes = publicRoutes
@@ -25,6 +26,7 @@ const AppRouter: FC = () => {
           element: <Navigate to={isAuth ? '/contests' : '/login'} replace />,
         },
       ],
+      errorElement: <ErrorPage />,
     },
   ])
 

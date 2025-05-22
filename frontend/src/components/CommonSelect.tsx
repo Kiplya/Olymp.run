@@ -21,7 +21,7 @@ const CommonSelect: FC<CommonSelectProps> = ({ options, value, onChange, placeho
       {placeholder}
     </option>
     {options.map((option, index) => (
-      <option key={index} label={option.value}>
+      <option key={index} value={option.value}>
         {option.label}
       </option>
     ))}

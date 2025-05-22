@@ -22,8 +22,8 @@ const Authorization: FC = () => {
   }, [isError, error])
 
   const handleSubmit = (e: FormEvent) => {
-    loginMutation({ login, password })
     e.preventDefault()
+    loginMutation({ login, password })
   }
 
   return (

@@ -95,6 +95,7 @@ const AdminTask: FC = () => {
   })
 
   const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
     if (!taskDifficulty || !testsFile) {
       return
     }
@@ -110,7 +111,6 @@ const AdminTask: FC = () => {
     formData.append('testsFile', testsFile)
 
     taskCreateMutation(formData)
-    e.preventDefault()
   }
 
   return (

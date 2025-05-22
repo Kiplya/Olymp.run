@@ -7,5 +7,6 @@ contestRouter.use(UserController.authMiddleware);
 contestRouter.use(ContestController.participationMiddleware);
 
 contestRouter.get("/getInfo", ContestController.getInfo);
+contestRouter.post("/solutionSubmit", ContestController.solutionSubmit);
 
 export default contestRouter;

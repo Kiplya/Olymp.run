@@ -119,14 +119,26 @@ export type ContestGetInfoRequest = {
 export const MAX_SCORE_FOR_TASK = 100;
 
 export const AllowedCompilers = {
-  54: "C++ (GCC 9.2.0)",
   50: "C (GCC 9.2.0)",
+  54: "C++ (GCC 9.2.0)",
   62: "Java (OpenJDK 13.0.1)",
   63: "JavaScript (Node.js 12.14.0)",
-  78: "Kotlin (1.3.70)",
   71: "Python (3.8.1)",
   73: "Rust (1.40.0)",
+  78: "Kotlin (1.3.70)",
 } as const;
 
 export type TypeAllowedCompilers =
   (typeof AllowedCompilers)[keyof typeof AllowedCompilers];
+
+export type TypeAllowedCompilerIds = keyof typeof AllowedCompilers;
+
+export type SolutionSubmitRequest = ContestGetInfoRequest & {
+  taskId: string;
+  solution: string;
+  compiler: TypeAllowedCompilerIds;
+};
+
+export type SolutionSubmitResponse = BaseResponse & {
+  score: number;
+};

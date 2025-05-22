@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import ContestService from "../services/ContestService";
-import { resServerError } from "../utils/common";
+import TaskService from "../services/TaskService";
+import { getJudge0StatusKey, resServerError } from "../utils/common";
+import { judgeApi } from "../handlers";
 import { user } from "@prisma/client";
 import {
   AddParticipantInContestRequest,
@@ -10,9 +12,38 @@ import {
   ContestDeletionRequest,
   ContestGetInfoResponse,
   ContestGetManyByParticipantResponse,
+  MAX_SCORE_FOR_TASK,
   RemoveParticipantFromContestRequest,
   ResponseStatus,
+  SolutionSubmitRequest,
+  SolutionSubmitResponse,
+  TypeAllowedCompilerIds,
 } from "@shared/apiTypes";
+
+type Judge0Response = {
+  status?: { id: number; description: string };
+  error?: string;
+};
+
+type Judge0Request = {
+  source_code: string;
+  language_id: TypeAllowedCompilerIds;
+  stdin: string;
+  expected_output: string;
+  cpu_time_limit: number;
+  memory_limit: number;
+};
+
+export const Judge0ResponseStatus = {
+  Accepted: 3,
+  "Wrong Answer": 4,
+  "Time Limit Exceeded": 5,
+  "Runtime Error": 6,
+  "Memory Limit Exceeded": 7,
+  "Output Limit Exceeded": 8,
+  "Compilation Error": 11,
+  "Internal Error": 13,
+} as const;
 
 export default class ContestController {
   static async create(
@@ -142,6 +173,130 @@ export default class ContestController {
       }
 
       res.status(ResponseStatus.SUCCESS).json(contestInfo);
+    } catch (err) {
+      resServerError(res, err);
+    }
+  }
+
+  static async solutionSubmit(
+    req: Request<{}, {}, SolutionSubmitRequest> & {
+      query: { contestId?: string };
+      user?: user;
+    },
+    res: Response<SolutionSubmitResponse | BaseResponse>
+  ) {
+    try {
+      const taskId = req.query?.taskId;
+      if (!taskId) {
+        res
+          .status(ResponseStatus.INVALID_CREDENTIALS)
+          .json({ message: "Task not specified" });
+        return;
+      }
+
+      const task = await TaskService.getById(taskId.toString());
+
+      if (!task) {
+        throw new Error(`Task with id ${taskId} not found`);
+      }
+
+      const isInContestTask = await ContestService.isInContestTask(
+        req?.query?.contestId!,
+        taskId.toString()
+      );
+
+      if (!isInContestTask) {
+        res
+          .status(ResponseStatus.INVALID_CREDENTIALS)
+          .json({ message: "Task isn't in contest" });
+        return;
+      }
+
+      const isCompletedContestTask =
+        await ContestService.isCompletedContestTask(
+          req?.query?.contestId!,
+          taskId.toString(),
+          req.user?.id!
+        );
+
+      if (isCompletedContestTask) {
+        res
+          .status(ResponseStatus.INVALID_CREDENTIALS)
+          .json({ message: "Task is completed" });
+        return;
+      }
+
+      const testsCount = task.tests.length;
+      const input =
+        `${testsCount}\n` +
+        task.tests.map((test) => test.input.trim()).join("\n");
+      const expectedOutput = task.tests
+        .map((test) => test.expectedOutput.trim())
+        .join("\n");
+
+      const sumbission = await judgeApi.post<Judge0Response, Judge0Request>(
+        "/submissions?base64_encoded=false&wait=true",
+        {
+          source_code: req.body.solution,
+          language_id: req.body.compiler,
+          stdin: input,
+          expected_output: expectedOutput,
+          cpu_time_limit: task.timeLimit / 1000,
+          memory_limit: task.memoryLimit * 1000,
+        }
+      );
+
+      if (!sumbission.body.status) {
+        await ContestService.upsertContestParticipantTask(
+          req?.query?.contestId!,
+          taskId.toString(),
+          req.user?.id!,
+          0
+        );
+
+        res.status(ResponseStatus.SUCCESS).json({
+          score: 0,
+          message: getJudge0StatusKey(
+            Judge0ResponseStatus["Compilation Error"]
+          ),
+        });
+      } else if (
+        sumbission.body.status.id === Judge0ResponseStatus["Accepted"]
+      ) {
+        await ContestService.upsertContestParticipantTask(
+          req?.query?.contestId!,
+          taskId.toString(),
+          req.user?.id!,
+          MAX_SCORE_FOR_TASK
+        );
+
+        await ContestService.incrementParticipantScore(
+          req?.query?.contestId!,
+          req.user?.id!,
+          MAX_SCORE_FOR_TASK
+        );
+
+        res.status(ResponseStatus.SUCCESS).json({
+          score: MAX_SCORE_FOR_TASK,
+          message: getJudge0StatusKey(sumbission.body.status.id),
+        });
+      } else if (
+        sumbission.body.status.id === Judge0ResponseStatus["Internal Error"]
+      ) {
+        throw new Error("Judge0 Internal Error");
+      } else {
+        await ContestService.upsertContestParticipantTask(
+          req?.query?.contestId!,
+          taskId.toString(),
+          req.user?.id!,
+          0
+        );
+
+        res.status(ResponseStatus.SUCCESS).json({
+          score: 0,
+          message: getJudge0StatusKey(sumbission.body.status.id),
+        });
+      }
     } catch (err) {
       resServerError(res, err);
     }

@@ -10,6 +10,7 @@ export const prisma = new PrismaClient();
 
 const apiInstance = axios.create({
   baseURL: process.env.JUDGE0_API_URL,
+  timeout: 30000,
 });
 
 export const judgeApi = {

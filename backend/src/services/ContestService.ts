@@ -1,6 +1,7 @@
 import {
   AddParticipantInContestRequest,
   ContestCreationRequest,
+  MAX_SCORE_FOR_TASK,
   RegistrationRequest,
   RemoveParticipantFromContestRequest,
 } from "@shared/apiTypes";
@@ -191,6 +192,85 @@ export default class ContestService {
     return await prisma.contest.findUnique({
       where: { id: contestId },
       select: { startTime: true, endTime: true },
+    });
+  }
+
+  static async isInContestTask(contestId: string, taskId: string) {
+    const task = await prisma.contestTask.findUnique({
+      where: {
+        contestId_taskId: {
+          contestId,
+          taskId,
+        },
+      },
+    });
+
+    if (task) return true;
+    return false;
+  }
+
+  static async isCompletedContestTask(
+    contestId: string,
+    taskId: string,
+    userId: string
+  ) {
+    const task = await prisma.contestParticipantTask.findUnique({
+      where: {
+        userId_contestId_taskId: {
+          userId,
+          contestId,
+          taskId,
+        },
+      },
+    });
+
+    if (task?.score === MAX_SCORE_FOR_TASK) return true;
+    return false;
+  }
+
+  static async upsertContestParticipantTask(
+    contestId: string,
+    taskId: string,
+    userId: string,
+    score: number
+  ) {
+    await prisma.contestParticipantTask.upsert({
+      where: {
+        userId_contestId_taskId: {
+          userId,
+          contestId,
+          taskId,
+        },
+      },
+      update: {
+        score,
+      },
+      create: {
+        userId,
+        contestId,
+        taskId,
+        score,
+      },
+    });
+  }
+
+  static async incrementParticipantScore(
+    contestId: string,
+    userId: string,
+    score: number
+  ) {
+    await prisma.contestParticipant.update({
+      where: {
+        userId_contestId: {
+          userId,
+          contestId,
+        },
+      },
+      data: {
+        score: {
+          increment: score,
+        },
+      },
     });
   }
 }

@@ -5,6 +5,8 @@ import {
   ContestGetInfoRequest,
   ContestGetInfoResponse,
   ContestGetManyByParticipantResponse,
+  SolutionSubmitRequest,
+  SolutionSubmitResponse,
 } from '@shared/apiTypes'
 
 export const contestApi = createApi({
@@ -20,6 +22,18 @@ export const contestApi = createApi({
         url: '/admin/contestCreate',
         method: 'POST',
         body: credentials,
+      }),
+    }),
+
+    contestSolutionSubmit: builder.mutation<SolutionSubmitResponse, SolutionSubmitRequest>({
+      query: (credentials) => ({
+        url: '/contest/solutionSubmit',
+        method: 'POST',
+        body: credentials,
+        params: {
+          contestId: credentials.contestId,
+          taskId: credentials.taskId,
+        },
       }),
     }),
 
@@ -40,4 +54,9 @@ export const contestApi = createApi({
   }),
 })
 
-export const { useContestCreateMutation, useContestGetManyByParticipantQuery, useContestGetInfoQuery } = contestApi
+export const {
+  useContestCreateMutation,
+  useContestGetManyByParticipantQuery,
+  useContestGetInfoQuery,
+  useContestSolutionSubmitMutation,
+} = contestApi

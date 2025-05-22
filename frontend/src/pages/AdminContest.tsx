@@ -54,6 +54,7 @@ const AdminContest: FC = () => {
   })
 
   const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
     if (!tasks) return
 
     const reqData = {
@@ -66,7 +67,6 @@ const AdminContest: FC = () => {
 
     contestCreateMutation(reqData)
     setHasDownloaded(false)
-    e.preventDefault()
   }
 
   return (

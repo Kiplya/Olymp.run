@@ -1,4 +1,10 @@
-import { AllowedCompilers, TypeTaskDifficulty } from '@shared/apiTypes'
+import {
+  AllowedCompilers,
+  MAX_SCORE_FOR_TASK,
+  SolutionSubmitRequest,
+  TypeAllowedCompilerIds,
+  TypeTaskDifficulty,
+} from '@shared/apiTypes'
 import parse from 'html-react-parser'
 import { FC, FormEvent } from 'react'
 import { useOutletContext } from 'react-router'
@@ -21,7 +27,6 @@ const convertDifficulty = (difficulty: TypeTaskDifficulty) => {
 
 interface TaskContext {
   task: {
-    id: string
     title: string
     description: string
     exampleInput: string
@@ -33,20 +38,27 @@ interface TaskContext {
 
   state: {
     solution: string
-    compiler: string
+    compiler: TypeAllowedCompilerIds | ''
   }
 
-  updateState: (newData: { solution?: string; compiler?: string }) => void
+  score: number | undefined
+  isLoading: boolean
+  contestId: string
+  taskId: string
+
+  submitSolution: (submitReq: SolutionSubmitRequest) => void
+  updateState: (newData: { solution?: string; compiler?: TypeAllowedCompilerIds }) => void
 }
 
-// TODO: 1) Add toast 2) Check query fetching + completed task for disable button
-
 const ContestTask: FC = () => {
-  const { task, state, updateState } = useOutletContext<TaskContext>()
-  const isDisabled = state.compiler && state.solution ? false : true
+  const { task, state, score, isLoading, submitSolution, taskId, contestId, updateState } =
+    useOutletContext<TaskContext>()
+  const isDisabled = state.compiler && state.solution && score !== MAX_SCORE_FOR_TASK && !isLoading ? false : true
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
+    if (!state.compiler) return
+    submitSolution({ contestId, taskId, compiler: state.compiler, solution: state.solution })
   }
 
   return (
@@ -85,12 +97,12 @@ const ContestTask: FC = () => {
           <strong>Компилятор:</strong>
         </p>
         <CommonSelect
-          value={state.compiler ?? ''}
+          value={state.compiler ? state.compiler.toString() : ''}
           placeholder='Выберите компилятор'
-          onChange={(e) => updateState({ compiler: e.currentTarget.value })}
-          options={Object.values(AllowedCompilers).map((value) => ({
-            label: value,
-            value: value,
+          onChange={(e) => updateState({ compiler: Number(e.currentTarget.value) as TypeAllowedCompilerIds })}
+          options={Object.entries(AllowedCompilers).map(([id, label]) => ({
+            label,
+            value: id,
           }))}
         />
 

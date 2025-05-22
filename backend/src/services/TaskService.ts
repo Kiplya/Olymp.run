@@ -104,4 +104,17 @@ export default class TaskService {
       take: limit,
     });
   }
+
+  static async getById(id: string) {
+    const task = await prisma.task.findUnique({
+      where: { id },
+      include: { tests: { orderBy: { order: "asc" } } },
+    });
+
+    if (!task?.tests.length) {
+      throw new Error("No tests found for this task");
+    }
+
+    return task;
+  }
 }
