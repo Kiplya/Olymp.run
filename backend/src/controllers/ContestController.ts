@@ -18,6 +18,7 @@ import {
   SolutionSubmitRequest,
   SolutionSubmitResponse,
   TypeAllowedCompilerIds,
+  AllowedCompilers,
 } from "@shared/apiTypes";
 
 type Judge0Response = {
@@ -223,6 +224,16 @@ export default class ContestController {
         res
           .status(ResponseStatus.INVALID_CREDENTIALS)
           .json({ message: "Task is completed" });
+        return;
+      }
+
+      if (
+        !(req.body.compiler in AllowedCompilers) ||
+        req.body.solution.length === 0
+      ) {
+        res
+          .status(ResponseStatus.INVALID_CREDENTIALS)
+          .json({ message: "Solution or compiler incorrect" });
         return;
       }
 
