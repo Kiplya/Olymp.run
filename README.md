@@ -10,5 +10,5 @@ You will need to create a **login** and **password** for the database.
   
 And after that rename **.env.example** to **.env**  
   
-**Command to build from root directory:**  
+**Command to rebuild from root directory:**  
 `docker-compose down; docker volume rm olymprun_frontend_build; docker-compose up --build`  
